@@ -49,30 +49,32 @@ bpUserSettings() {
 
 DOWNLOAD="download"
 
-def_src=(\
+def_src=(
   "src/def.h"
 )
 
-def_avr_src=(\
+def_avr_src=(
+  "src/def.h"
   "src/def_avr.h"
 )
 
-def_util_src=(\
+def_util_src=(
   "src/def_util.h"
-	"src/def_util.c"
+  "src/def_util.c"
 )
 
-dictionary=(\
+dictionary=(
   "src/i2s.h"
-	"src/i2s.c"	
+  "src/i2s.c"
   "src/i2i.h"
-	"src/i2i.c"	
+  "src/i2i.c"
   "src/s2s.h"
-	"src/s2s.c"	
+  "src/s2s.c"
 )
 
-tparty=(\
+tparty=(
   "https://github.com/argtable/argtable3.git" ":"
+	"https://github.com/damadmai/pfleury.git" ":"
 )
 
 #
@@ -82,9 +84,9 @@ tparty=(\
 srcInstall() {
   dst="$1"
   lst=("${@:2}")
-	for f in "${lst[@]}"; do
-		bpCp "${BP_SELF_DIR}/${f}" "${dst}"
-	done
+  for f in "${lst[@]}"; do
+    bpCp "${BP_SELF_DIR}/${f}" "${dst}"
+  done
 }
 
 def() { ##D Install def.h
@@ -107,55 +109,61 @@ dict() { ##D Dictionary datastrcutures
   srcInstall "${dst}" "${dictionary[@]}"
 }
 
-##-
+##- 3dparty
+
+uart() { ##D Install Peter Fleury's AVR uart library
+  bpCp "${BP_SELF_DIR}/${DOWNLOAD}/pfleury/uart.h" "$2"
+	bpCp "${BP_SELF_DIR}/${DOWNLOAD}/pfleury/uart.c" "$2"
+}
 
 #
 # Clone git repo
 #
 # $1 URL
 # $2 Destination dir
-#   
+#
 gclone() {
   fn=$(basename -- "$1")
-	fn="${fn%.*}"
-	bpCd "${2}"
-	if [ -e "$fn" ]; then
-	  bpInfo "Directory $(bpColorizeFile "$(realpath "$fn")") already exists, skipping cloning"
-		bpCd -
-	  return
-	fi
-	
-	if git clone "$1"; then
-	  bpOk "Cloning of $(bpColorizeUrl "$1") successfull."
-	else
-	  bpError "Cloning of $(bpColorizeUrl "$1") failed."
-	fi
+  fn="${fn%.*}"
+  bpCd "${2}"
+  if [ -e "$fn" ]; then
+    bpInfo "Directory $(bpColorizeFile "$(realpath "$fn")") already exists, skipping cloning"
+    bpCd -
+    return
+  fi
+
+  if git clone "$1"; then
+    bpOk "Cloning of $(bpColorizeUrl "$1") successfull."
+  else
+    bpError "Cloning of $(bpColorizeUrl "$1") failed."
+  fi
 }
-																		
+
 ghClone() { ## Github clone
-#  gclone "ssh://git@${ghURL}:/${ghUser}/${1}.git" "${PROJDIR}"
-	gclone "${1}" "${DOWNLOAD}"
-}   
-										
+  #  gclone "ssh://git@${ghURL}:/${ghUser}/${1}.git" "${PROJDIR}"
+  gclone "${1}" "${DOWNLOAD}"
+}
 
 download() { ##D Download 3d party projects
   bpPrintLine "Cloning 3d party projects"
-	bpMkDir "${DOWNLOAD}"
-	len=${#tparty[@]}
-	i=0
-	while [ $i -lt "$len" ]; do
-	  proj="${tparty[$i]}"
-	  ((i++))
-		cmd="${tparty[$i]}"
-		((i++))
-		ghClone "${proj}"
-		
-		if [ "$cmd" != ":" ]; then
-		  ${DOWNLOAD}/${proj}/${cmd}
-		fi
-	done
+  bpMkDir "${DOWNLOAD}"
+  len=${#tparty[@]}
+  i=0
+  while (("$i" < "$len")); do
+    proj="${tparty[$i]}"
+    ((i++))
+    cmd="${tparty[$i]}"
+    ((i++))
+    ghClone "${proj}"
+
+    if [ "$cmd" != ":" ]; then
+      ${DOWNLOAD}/${proj}/${cmd}
+    fi
+  done
 }
-																																										
+
+
+##-
 
 install() { ##D Install
   bpAddModule "${BP_SELF_DIR}/def_init"
@@ -168,7 +176,6 @@ edef() { ##D Edit def.h
 edefa() { ##D Edit def_avr.h
   bpEdit "${BP_SELF_DIR}/src/def_avr.h" "$2"
 }
-
 
 #---------------------------------------------------------------------
 # Bashplate settings

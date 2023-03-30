@@ -1,18 +1,16 @@
 /**
  * -----------------------------------------------------------------
- * @file  def_avr.h
  * @brief Some common definitions for Atmel AVR/Arduino MCU's.
  *
- *
+ * @file  def_avr.h
  * @author Peter Malmberg <peter.malmberg@gmail.com>
+ * @license MIT
  *
- * Licence MIT
  * -----------------------------------------------------------------
  */
 
 #ifndef DEF_AVR_H_
 #define DEF_AVR_H_
-
 
 // Atmel AVR specific -------------------------------------------------------
 
@@ -59,22 +57,19 @@
 
 // Arduino specific ---------------------------------------------------------
 
-#ifdef ARDUINO_MEGA
-#define ARD_LED_INIT()             DDRB  |= (1<<PB7)
-#define ARD_LED_ON()               PORTB |= (1<<PB7)
-#define ARD_LED_OFF()              PORTB &= ~(1<<PB7)
-#define ARD_LED_TOGGLE()           PORTB ^= (1<<PB7)
-#define ARD_IS_LED_ON()            (PINB && (1<<PB7))
-#endif
-
 #ifdef ARDUINO
-#define ARD_LED_INIT()             DDRB  |= (1<<PB5)
-#define ARD_LED_ON()               PORTB |= (1<<PB5)
-#define ARD_LED_OFF()              PORTB &= ~(1<<PB5)
-#define ARD_LED_TOGGLE()           PORTB ^= (1<<PB5)
-#define ARD_IS_LED_ON()            (PINB && (1<<PB5))
+#define ARDUINO_LED_PIN PB5
 #endif
 
+#ifdef ARDUINO_MEGA
+#define ARDUINO_LED_PIN PB7
+#endif
+
+#define ARDUINO_LED_INIT() DDRB |= (1 << ARDUINO_LED_PIN)
+#define ARDUINO_LED_ON() PORTB |= (1 << ARDUINO_LED_PIN)
+#define ARDUINO_LED_OFF() PORTB &= ~(1 << ARDUINO_LED_PIN)
+#define ARDUINO_LED_TOGGLE() PORTB ^= (1 << ARDUINO_LED_PIN)
+#define ARDUINO_LED_IS_ON() (PINB && (1 << ARDUINO_LED_PIN))
 
 /*
          +----[PWR]-------------------| USB |--+
@@ -203,8 +198,6 @@
           \_______________________/
 
 */
-
-
 
 //  http://busyducks.com/wp_4_1/2015/11/16/ascii-art-arduino-pinouts/
 

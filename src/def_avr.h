@@ -28,31 +28,103 @@
 #define RESET()                     wdt_enable(WDTO_500MS); while(1) {}
 
 
-// AVR Timers ---------------------------------------------------------------
+// AVR Timer 0 (8 bit) ------------------------------------------------------
 
-#define TIMER0_DISSABLE()     TCCR0B &= 0xF8                  /* Disable timer                  */
-#define TIMER0_PRES_1()       TIMER0_DISSABLE(); TCCR0B |= 1  /* Select prescaler 1/1           */
-#define TIMER0_PRES_8()       TIMER0_DISSABLE(); TCCR0B |= 2  /* Select prescaler 1/8           */
-#define TIMER0_PRES_64()      TIMER0_DISSABLE(); TCCR0B |= 3  /* Select prescaler 1/64          */
-#define TIMER0_PRES_256()     TIMER0_DISSABLE(); TCCR0B |= 4  /* Select prescaler 1/256         */
-#define TIMER0_PRES_1024()    TIMER0_DISSABLE(); TCCR0B |= 5  /* Select prescaler 1/1024        */
-#define TIMER0_EXT_FE()       TIMER0_DISSABLE(); TCCR0B |= 6  /* External T0 falling edge       */
-#define TIMER0_EXT_RE()       TIMER0_DISSABLE(); TCCR0B |= 7  /* External T0 rising edge        */
-#define TIMER0_OVF_IE()       TIMSK0 |= (1<<TOIE0)            /* Enable overflow interrupt      */
-#define TIMER0_OVF_ID()       TIMSK0 &= ~(1<<TOIE0)           /* Disable overflow interrupt     */
-#define TIMER0_RELOAD(x)      TCNT0 = x                       /* Reload timer register          */
+// Clock source
+#define TIMER0_CLK_DISSABLE()     TCCR0B &= 0xF8              // Disable timer
+#define TIMER0_CLK_PRES_1()       TCCR0B |= 1                 // Select prescaler 1/1
+#define TIMER0_CLK_PRES_8()       TCCR0B |= 2                 // Select prescaler 1/8
+#define TIMER0_CLK_PRES_64()      TCCR0B |= 3                 // Select prescaler 1/64
+#define TIMER0_CLK_PRES_256()     TCCR0B |= 4                 // Select prescaler 1/256
+#define TIMER0_CLK_PRES_1024()    TCCR0B |= 5                 // Select prescaler 1/1024
+#define TIMER0_CLK_EXT_FE()       TCCR0B |= 6                 // External T0 falling edge
+#define TIMER0_CLK_EXT_RE()       TCCR0B |= 7                 // External T0 rising edge
 
-#define TIMER1_DISSABLE()     TCCR1B &= 0xF8                  /* Disable timer                  */
-#define TIMER1_PRES_1()       TIMER1_DISSABLE(); TCCR1B |= 1  /* Select prescaler 1/1           */
-#define TIMER1_PRES_8()       TIMER1_DISSABLE(); TCCR1B |= 2  /* Select prescaler 1/8           */
-#define TIMER1_PRES_64()      TIMER1_DISSABLE(); TCCR1B |= 3  /* Select prescaler 1/64          */
-#define TIMER1_PRES_256()     TIMER1_DISSABLE(); TCCR1B |= 4  /* Select prescaler 1/256         */
-#define TIMER1_PRES_1024()    TIMER1_DISSABLE(); TCCR1B |= 5  /* Select prescaler 1/1024        */
-#define TIMER1_EXT_FE()       TIMER1_DISSABLE(); TCCR1B |= 6  /* External T0 falling edge       */
-#define TIMER1_EXT_RE()       TIMER1_DISSABLE(); TCCR1B |= 7  /* External T0 rising edge        */
-#define TIMER1_OVF_IE()       TIMSK1 |= (1<<TOIE1)            /* Enable overflow interrupt      */
-#define TIMER1_OVF_ID()       TIMSK1 &= ~(1<<TOIE1)           /* Disable overflow interrupt     */
-#define TIMER1_RELOAD(x)      TCNT1H = (uint8_t) ((uint16_t)x>>8); TCNT1L = (uint8_t)((uint16_t)x & 0xff)  /* Reload timer register          */
+// Interrupt control
+#define TIMER0_OVF_IE()           TIMSK0 |= (1<<TOIE0)        // Enable overflow interrupt
+#define TIMER0_OVF_ID()           TIMSK0 &= ~(1<<TOIE0)       // Disable overflow interrupt
+#define TIMER0_OCA_IE()           TIMSK0 |= (1<<OCIE0A)       // Enable output compare A interrupt
+#define TIMER0_OCA_ID()           TIMSK0 &= ~(1<<OCIE0A)      // Disable output compare A interrupt
+#define TIMER0_OCB_IE()           TIMSK0 |= (1<<OCIE0B)       // Enable output compare B interrupt
+#define TIMER0_OCB_ID()           TIMSK0 &= ~(1<<OCIE0B)      // Disable output compare B interrupt
+
+#define TIMER0_OCA_SET(x)         OCR0A = x                   // Set output compare A register
+#define TIMER0_OCB_SET(x)         OCR0B = x                   // Set output compare B register
+#define TIMER0_RELOAD(x)          TCNT0 = x                   // Reload timer register
+    
+
+// AVR Timer 1 (16 bit) -----------------------------------------------------
+
+// Clock source
+#define TIMER1_CLK_NONE()         TCCR1B &= 0xF8               // Disable timer
+#define TIMER1_CLK_PRES_1()       TCCR1B |= 1                  /* Select prescaler 1/1           */
+#define TIMER1_CLK_PRES_8()       TCCR1B |= 2                  /* Select prescaler 1/8           */
+#define TIMER1_CLK_PRES_64()      TCCR1B |= 3                  /* Select prescaler 1/64          */
+#define TIMER1_CLK_PRES_256()     TCCR1B |= 4                  /* Select prescaler 1/256         */
+#define TIMER1_CLK_PRES_1024()    TCCR1B |= 5                  /* Select prescaler 1/1024        */
+#define TIMER1_CLK_EXT_FE()       TCCR1B |= 6                  /* External T0 falling edge       */
+#define TIMER1_CLK_EXT_RE()       TCCR1B |= 7                  /* External T0 rising edge        */
+
+// Interrupt control
+#define TIMER1_OVF_IE()           TIMSK1 |= (1<<TOIE1)         /* Enable overflow interrupt      */
+#define TIMER1_OVF_ID()           TIMSK1 &= ~(1<<TOIE1)        /* Disable overflow interrupt     */
+#define TIMER1_OCA_IE()           TIMSK1 |= (1<<OCIE1A)       // Enable output compare A interrupt
+#define TIMER1_OCA_ID()           TIMSK1 &= ~(1<<OCIE1A)      // Disable output compare A interrupt
+#define TIMER1_OCB_IE()           TIMSK1 |= (1<<OCIE1B)       // Enable output compare B interrupt
+#define TIMER1_OCB_ID()           TIMSK1 &= ~(1<<OCIE1B)      // Disable output compare B interrupt
+
+                                                              // Set output compare A register
+#define TIMER1_OCA_SET(x) OCR1AH = (uint8_t) ((uint16_t)x>>8); OCR1AL = (uint8_t) ((uint16_t)x & 0xff)
+                                                              // Set output compare B register
+#define TIMER1_OCB_SET(x)         OCR1BH = (uint8_t) ((uint16_t)x>>8); OCR1BL = (uint8_t) ((uint16_t)x & 0xff)
+                                                              // Reload timer register          
+#define TIMER1_RELOAD(x)          TCNT1H = (uint8_t) ((uint16_t)x>>8); TCNT1L = (uint8_t)((uint16_t)x & 0xff)  
+
+
+// AVR Timer 2 (8 bit) ------------------------------------------------------
+
+// Clock source
+#define TIMER2_CLK_DISSABLE()     TCCR2B &= 0xF8              // Disable timer
+#define TIMER2_CLK_PRES_1()       TCCR2B |= 1                 // Select prescaler 1/1
+#define TIMER2_CLK_PRES_8()       TCCR2B |= 2                 // Select prescaler 1/8
+#define TIMER2_CLK_PRES_64()      TCCR2B |= 3                 // Select prescaler 1/64
+#define TIMER2_CLK_PRES_256()     TCCR2B |= 4                 // Select prescaler 1/256
+#define TIMER2_CLK_PRES_1024()    TCCR2B |= 5                 // Select prescaler 1/1024
+#define TIMER2_CLK_EXT_FE()       TCCR2B |= 6                 // External T0 falling edge
+#define TIMER2_CLK_EXT_RE()       TCCR2B |= 7                 // External T0 rising edge
+
+// Interrupt control
+#define TIMER2_OVF_IE()           TIMSK2 |= (1<<TOIE0)        // Enable overflow interrupt
+#define TIMER2_OVF_ID()           TIMSK2 &= ~(1<<TOIE0)       // Disable overflow interrupt
+#define TIMER2_OCA_IE()           TIMSK2 |= (1<<OCIE0A)       // Enable output compare A interrupt
+#define TIMER2_OCA_ID()           TIMSK2 &= ~(1<<OCIE0A)      // Disable output compare A interrupt
+#define TIMER2_OCB_IE()           TIMSK2 |= (1<<OCIE0B)       // Enable output compare B interrupt
+#define TIMER2_OCB_ID()           TIMSK2 &= ~(1<<OCIE0B)      // Disable output compare B interrupt
+
+#define TIMER2_OCA_SET(x)         OCR2A = x                   // Set output compare A register
+#define TIMER2_OCB_SET(x)         OCR2B = x                   // Set output compare B register
+#define TIMER2_RELOAD(x)          TCNT2 = x                   // Reload timer register
+
+
+/* Timer example code
+
+
+ISR(TIMER0_COMPA_vect) {
+  TIMER0_RELOAD(0);
+  timer3++;
+
+  if (timer3 >= 100) {
+    timer3 = 0;
+  }
+}
+ 
+
+// Timer 0
+TIMER0_CLK_PRES_1024(); // set prescaler to 1/1024
+TIMER0_OCA_IE();        // enable output compare A interrupt
+TIMER0_OCA_SET(156);
+sei();
+*/
 
 
 // Arduino specific ---------------------------------------------------------

@@ -39,15 +39,15 @@ set -o pipefail
 # User defined Settings
 #---------------------------------------------------------------------
 bpUserSettings() {
-  :
+  DOWNLOAD="${BP_SELF_DIR}/download"
 }
 #---------------------------------------------------------------------
 # User defined functions
 #---------------------------------------------------------------------
 
-##-
+##- Def
 
-DOWNLOAD="download"
+
 
 def_src=(
   "src/def.h"
@@ -73,9 +73,20 @@ dictionary=(
 )
 
 tparty=(
-  "https://github.com/argtable/argtable3.git" ":"
-	"https://github.com/damadmai/pfleury.git" ":"
+	"tar" "https://github.com/argtable/argtable3/releases/download/v3.2.2.f25c624/argtable-v3.2.2.f25c624-amalgamation.tar.gz" "argtable"
+	"git" "https://github.com/damadmai/pfleury.git" ":"	
 )
+
+
+argtable() {
+  bpInfo "Unpacking $1"
+#  tar --dir ${DOWNLOAD} -xvzf ${DOWNLOAD}/$(basename "$1")
+  tar --dir ${DOWNLOAD} -xvzf ${DOWNLOAD}/$(basename "$1")
+#	tar --dir ${DOWNLOAD} -xvzf $(basename "$1")
+  bpOk "Argtable"
+}
+
+
 
 #
 # $1 destination
@@ -112,9 +123,21 @@ dict() { ##D Dictionary datastrcutures
 ##- 3dparty
 
 uart() { ##D Install Peter Fleury's AVR uart library
-  bpCp "${BP_SELF_DIR}/${DOWNLOAD}/pfleury/uart.h" "$2"
-	bpCp "${BP_SELF_DIR}/${DOWNLOAD}/pfleury/uart.c" "$2"
+  bpCp "${DOWNLOAD}/pfleury/uart.h" "$2"
+	bpCp "${DOWNLOAD}/pfleury/uart.c" "$2"
 }
+
+argt() { ##D Install argtable3 library
+  bpCp "${DOWNLOAD}/dist/argtable3.h" "${2:-.}"
+	bpCp "${DOWNLOAD}/dist/argtable3.c" "${2:-.}"
+#	bpCp "${DOWNLOAD}/argtable3/src/argtable3.h" "$2"
+#	bpCp "${DOWNLOAD}/argtable3/src/argtable3.c" "$2"
+	
+#	bpCp "${DOWNLOAD}/argtable3/src/argtable3_private.h" "$2"
+}
+
+
+##-
 
 #
 # Clone git repo
@@ -150,20 +173,29 @@ download() { ##D Download 3d party projects
   len=${#tparty[@]}
   i=0
   while (("$i" < "$len")); do
-    proj="${tparty[$i]}"
+    method="${tparty[$i]}"
+    ((i++))
+		proj="${tparty[$i]}"
     ((i++))
     cmd="${tparty[$i]}"
     ((i++))
-    ghClone "${proj}"
+		
+		if [ "$method" == "git" ]; then 
+      ghClone "${proj}"
+		fi
+
+    if [ "$method" == "tar" ]; then 
+		  rm -f ${DOWNLOAD}/$(basename "$proj")
+      wget  --show-progress --directory-prefix "${DOWNLOAD}" "${proj}"
+		fi
+
 
     if [ "$cmd" != ":" ]; then
-      ${DOWNLOAD}/${proj}/${cmd}
+      ${cmd} "${proj}"
     fi
   done
 }
 
-
-##-
 
 install() { ##D Install
   bpAddModule "${BP_SELF_DIR}/def_init"

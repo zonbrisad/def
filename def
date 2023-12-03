@@ -201,6 +201,8 @@ install() { ##D Install
   bpAddModule "${BP_SELF_DIR}/def_init"
 }
 
+##- Development
+
 edef() { ##D Edit def.h
   bpEdit "${BP_SELF_DIR}/src/def.h" "$2"
 }
@@ -208,6 +210,13 @@ edef() { ##D Edit def.h
 edefa() { ##D Edit def_avr.h
   bpEdit "${BP_SELF_DIR}/src/def_avr.h" "$2"
 }
+
+
+ddef() { ##D Run diff program on external def.h
+  $BP_DIFF "${BP_SELF_DIR}/src/def.h" "$2"
+
+}
+
 
 #---------------------------------------------------------------------
 # Bashplate settings

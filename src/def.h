@@ -264,18 +264,28 @@ typedef struct
 /** \name Usual Constants
  */
 //! @{
+
 #define DISABLE 0
 #define ENABLE 1
+#define PASS 0
+#define FAIL 1
+#define LOW 0
+#define HIGH 1
+
+#ifndef FALSE
+#define FALSE (0)
+#endif
+
+#ifndef TRUE
+#define TRUE (1)
+#endif
+
 #ifndef __cplusplus
 #if !defined(__bool_true_false_are_defined)
 #define false 0
 #define true 1
 #endif
 #endif
-#define PASS 0
-#define FAIL 1
-#define LOW 0
-#define HIGH 1
 //! @}
 
 #ifndef bool
@@ -294,6 +304,10 @@ typedef unsigned long ulong;
 
 #ifndef true
 #define true 1
+#endif
+
+#ifndef NULL
+#define NULL (void)0
 #endif
 
 #ifndef ulong
@@ -384,14 +398,6 @@ typedef unsigned long ulong;
 #endif
 #ifndef MAXLONG
 #define MAXLONG ((long)2147483647) ///< Long integer max value.
-#endif
-
-#ifndef FALSE
-#define FALSE (0)
-#endif
-
-#ifndef TRUE
-#define TRUE (1)
 #endif
 
 /**
@@ -555,10 +561,6 @@ typedef unsigned long ulong;
 
 #undef isOutside
 #define isOutside(val, min, max) (!isWithin(val, min, max))
-
-#ifndef NULL
-#define NULL (void)0
-#endif
 
 // Bit manipulation ---------------------------------------------------------
 
@@ -802,7 +804,7 @@ typedef unsigned long ulong;
 
 //! @}
 
-#define low_byte(w) ((uint8_t)((w)&0xff))
+#define low_byte(w) ((uint8_t)((w) & 0xff))
 
 #define high_byte(w) ((uint8_t)((w) >> 8))
 
@@ -880,59 +882,64 @@ typedef unsigned long ulong;
 
 // ANSI color codes ---------------------------------------------------------
 
-#define E_BLACK "\033[0;300m"
-#define E_RED "\033[0;31m"
-#define E_GREEN "\033[0;32m"
-#define E_YELLOW "\033[0;33m"
-#define E_BLUE "\033[0;34m"
-#define E_MAGENTA "\033[0;35m"
-#define E_CYAN "\033[0;36m"
-#define E_GRAY "\033[0;37m"
-#define E_DARKGRAY "\033[1;30m"
-#define E_BR_RED "\033[1;31m"
-#define E_BR_GREEN "\033[1;32m"
-#define E_BR_YELLOW "\033[1;33m"
-#define E_BR_BLUE "\033[1;34m"
-#define E_BR_MAGENTA "\033[1;35m"
-#define E_BR_CYAN "\033[1;36m"
-#define E_WHITE "\033[1;37m"
+#define E_BLACK "\e[0;300m"
+#define E_RED "\e[0;31m"
+#define E_GREEN "\e[0;32m"
+#define E_YELLOW "\e[0;33m"
+#define E_BLUE "\e[0;34m"
+#define E_MAGENTA "\e[0;35m"
+#define E_CYAN "\e[0;36m"
+#define E_GRAY "\e[0;37m"
+#define E_DARKGRAY "\e[1;30m"
+#define E_BR_RED "\e[1;31m"
+#define E_BR_GREEN "\e[1;32m"
+#define E_BR_YELLOW "\e[1;33m"
+#define E_BR_BLUE "\e[1;34m"
+#define E_BR_MAGENTA "\e[1;35m"
+#define E_BR_CYAN "\e[1;36m"
+#define E_WHITE "\e[1;37m"
 
-#define E_BG_BLACK "\033[40m"
-#define E_BG_RED "\033[41m"
-#define E_BG_GREEN "\033[42m"
-#define E_BG_YELLOW "\033[43m"
-#define E_BG_BLUE "\033[44m"
-#define E_BG_MAGENTA "\033[45m"
-#define E_BG_CYAN "\033[46m"
-#define E_BG_WHITE "\033[1;47m"
+#define E_BG_BLACK "\e[40m"
+#define E_BG_RED "\e[41m"
+#define E_BG_GREEN "\e[42m"
+#define E_BG_YELLOW "\e[43m"
+#define E_BG_BLUE "\e[44m"
+#define E_BG_MAGENTA "\e[45m"
+#define E_BG_CYAN "\e[46m"
+#define E_BG_WHITE "\e[1;47m"
 
 // ANSI Text attributes
 #define E_BOLD "\e[1m"
-#define E_LOWI "\e[2m"
+#define E_DIM "\e[2m"
+#define E_ITALIC "\e[3m"
 #define E_UNDERLINE "\e[4m"
 #define E_BLINK "\e[5m"
 #define E_REVERSE "\e[7m"
+#define E_CROSSED "\e[9m"
+#define E_OVERLINED "\e[53m"
 
-#define E_END "\033[0m"
-#define E_CLEAR "\033[2J"
-#define E_RESET "\033c"
+#define E_RESET "\e[0m"
+#define E_CLEAR "\e[2J"
 
-#define E_WONR "\033[1;47\033[1;31m"
+#define E_WONR "\e[1;47\033[1;31m"
 
-#define E_OK "\033[0;32m"
-#define E_WARN "\033[33;01m"
-#define E_ERROR "\033[31;01m"
+#define E_OK "\e[0;32m"
+#define E_WARN "\e[33;01m"
+#define E_ERROR "\e[31;01m"
 
 // ANSI movement codes ------------------------------------------------------
 
-#define E_HOME "\033[H"    // cursor to left upper corner
-#define E_UP "\033[A"      // cursor up one line
-#define E_DOWN "\033[B"    // cursor down one lin
-#define E_FORWARD "\033[C" // cursor right one character
-#define E_BACK "\033[D"    // cursor left one charachter
+#define E_UP "\e[A"      // cursor up one line
+#define E_DOWN "\e[B"    // cursor down one lin
+#define E_FORWARD "\e[C" // cursor right one character
+#define E_BACK "\e[D"    // cursor left one charachter
+#define E_CNL "\e[E"     // Cursor next line, move cursor to begining of next line
+#define E_CPL "\e[F"     // Cursor previous line, move cursor to begining of previous line
 
-#define E_HIDE_CURSOR "\033[?25l" // hide cursor
-#define E_SHOW_CURSOR "\033[?25h" // show cursor
+#define E_HOME "\e[H" // cursor to left upper corner
+
+#define E_HIDE "\e[?25l" // hide cursor
+#define E_SHOW "\e[?25h" // show cursor
 
 // Debugging ----------------------------------------------------------------
 
@@ -956,7 +963,7 @@ typedef unsigned long ulong;
 #define FATAL_COLOR E_BR_RED
 #define ROWNR_COLOR E_WHITE
 #define FUNC_COLOR E_BR_CYAN
-#define DEBUG_CEND E_END
+#define DEBUG_CEND E_RESET
 #endif
 
 // default defprintf
@@ -1050,20 +1057,10 @@ typedef unsigned long ulong;
 #define FATALDO(f)
 #endif
 
-// some legacy macros, DO NOT USE IN NEW CODE
-// #define DEBUGPRINT_COND(cond, _fmt, ...) DEBUGPRINTC(cond, _fmt, ...)
-// #define ERRORPRINT_COND(cond, _fmt, ...) ERRORPRINTC(cond, _fmt, ...)
-// #define WARNINGPRINT_COND(cond, _fmt, ...) WARNINGPRINTC(cond, _fmt, ...)
-// #define INFOPRINT_COND(cond, _fmt, ...) INFOPRINTC(cond, _fmt, ...)
-// #define FATALPRINT_COND(cond, _fmt, ...) FATALPRINTC(cond, _fmt, ...)
-
-// #define DEBUG_DO(f) DEBUGDO(f)
-// #define FATAL_DO(f) FATALDO(f)
-// #define ERROR_DO(f) ERRORDO(f)
-// #define WARNING_DO(f) WARNINGDO(f)
-// #define FATAL_DO(f) FATALDO(f)
-
 // Misc ---------------------------------------------------------------------
+
+// Determine length of array
+#define ARRAY_LENGTH(array) (sizeof((array)) / sizeof((array)[0]))
 
 // For removing unused variable/parameter warning from compiler output
 #define UNUSED_PARAM(p) (void)p

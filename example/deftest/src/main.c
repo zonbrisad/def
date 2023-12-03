@@ -19,6 +19,7 @@
 #include <signal.h>
 #include <string.h>
 #include <errno.h>
+#include <stdbool.h>
 
 #include "unity.h"
 
@@ -28,6 +29,7 @@
 #include "i2i.h"
 #include "i2s.h"
 #include "s2s.h"
+#include "mstr.h"
 
 // Defines ----------------------------------------------------------------
 
@@ -91,16 +93,16 @@ void colorTest(void)
     {
         for (i = 0; i < S2S_len(fgColors); i++)
         {
-            printf("%s%s %s " E_END, bgColors[j].key, fgColors[i].key, fgColors[i].value);
+            printf("%s%s %s " E_RESET, bgColors[j].key, fgColors[i].key, fgColors[i].value);
         }
 
         printf("\n");
     }
 
     printf("\n");
-    printf(E_LOWI "Low intensity text\n" E_END);
-    printf(E_UNDERLINE "Underline text\n" E_END);
-    printf(E_REVERSE "Reverse text\n" E_END);
+    printf(E_DIM "Low intensity text\n" E_RESET);
+    printf(E_UNDERLINE "Underline text\n" E_RESET);
+    printf(E_REVERSE "Reverse text\n" E_RESET);
 
     printf("\n");
 }
@@ -258,6 +260,51 @@ int unitTest(void)
     return UNITY_END();
 }
 
+int mstr_test()
+{
+    mstr *ms = mstr_new("Hello");
+    mstr *again = mstr_new(" Again! ");
+    mstr *strip = mstr_new("    Pleace strip   some for   me!!        ");
+    mstr *astrip = mstr_new("  ,!! ..   A more...advanced,,, stripping..  ..,,,     ");
+    mstr *num = mstr_new("1234567890");
+    mstr *strip2 = mstr_new(strip);
+    mstr *ml = mstr_new(512);
+
+    printTextLine("msrt test");
+    mstr_print(NULL);
+
+    mstr_print(ms);
+    mstr_append(ms, " world!");
+    mstr_print(ms);
+    mstr_append(ms, again);
+    mstr_print(ms);
+
+    mstr *mc = mstr_new(ms);
+    mstr_append(mc, " - Copy");
+    mstr_print(mc);
+
+    mstr_prepend(ms, "Prepended: ");
+    mstr_print(ms);
+
+    mstr_prepend(ms, again);
+    mstr_print(ms);
+
+    mstr_print(strip);
+    mstr_strip(strip, " ");
+    mstr_print(strip);
+
+    mstr_lstrip(strip2, " ");
+    mstr_print(strip2);
+    mstr_rstrip(strip2, " ");
+    mstr_print(strip2);
+
+    mstr_print(astrip);
+    mstr_strip(astrip, " ,.!");
+    mstr_print(astrip);
+
+    mstr_print(num);
+}
+
 int main(int argc, char *argv[])
 {
     int x;
@@ -268,9 +315,13 @@ int main(int argc, char *argv[])
 
     unitTest();
 
+    mstr_test();
+
+    printTextLine("Info");
     printSysInfo();
     printf("Path to program: %s\n", getPathToSelf());
 
+    printTextLine("Bits");
     printf("Binary %s\n", int2bin(buf, 0xAA, 8));
     printf("Binary %s\n", int2bin(buf, 0xFF, 8));
     printf("Binary %s\n", int2bin(buf, 0xAAAA, 16));
@@ -305,9 +356,9 @@ int main(int argc, char *argv[])
     //  x = bit_reverse8(x);
     //  printf("x = %s\n", int2bin(x, 8));
 
-    printLine();
-    printTextLine("Kalle");
-    printTextLine("A test");
+    // printLine();
+    // printTextLine("Kalle");
+    // printTextLine("A test");
 
     return 0;
 }

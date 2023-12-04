@@ -23,8 +23,9 @@
 
 void mstr_move(mstr *dst, int pos, int moves)
 {
+  int pos_x = ((pos >= 0) ? pos : (dst->len + pos));
   // move existing text forward
-  for (int i = dst->len - 1; i >= pos; i--)
+  for (int i = dst->len - 1; i >= pos_x; i--)
   {
     dst->str[i + moves] = dst->str[i];
   }
@@ -34,10 +35,11 @@ void mstr_move(mstr *dst, int pos, int moves)
 
 void mstr_copy(mstr *dst, char *src, int pos, int len)
 {
+  int pos_x = ((pos >= 0) ? pos : (dst->len + pos - 1));
   // copy new text from src
   for (size_t i = 0; i < len; i++)
   {
-    dst->str[i + pos] = src[i];
+    dst->str[i + pos_x] = src[i];
   }
 }
 

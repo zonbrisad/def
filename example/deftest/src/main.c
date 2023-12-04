@@ -310,7 +310,21 @@ int mstr_test()
     mstr_insert(insert, insert2, 10);
     mstr_print(insert);
 
-    mstr_print(num);
+    mstr *insertbehind = mstr_new("Insert behind!");
+    mstr_print(insertbehind);
+    // mstr_insert(insertbehind, "from ", -8);
+    // mstr_print(insertbehind);
+
+    mstr *insert3 = mstr_new("235679");
+    mstr_print(insert3);
+    mstr_insert(insert3, "1", 0);
+    mstr_print(insert3);
+    mstr_insert(insert3, "4", 3);
+    mstr_print(insert3);
+    mstr_insert(insert3, "8", -1);
+    mstr_print(insert3);
+
+    // mstr_print(insert3);
 }
 
 int main(int argc, char *argv[])

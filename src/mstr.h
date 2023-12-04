@@ -26,15 +26,15 @@ extern "C"
 
     typedef struct mstr_t
 {
-  char *str;
-  size_t size;
-  size_t len;
+    char *str;
+    size_t size;
+    size_t len;
 } mstr;
 
-#define mstr_new(S) _Generic((S), \
-    char *: mstr_newc,            \
-    int: mstr_newl,               \
-    mstr *: mstr_news)(S)
+#define mstr_new(SRC) _Generic((SRC), \
+    char *: mstr_newc,                \
+    int: mstr_newl,                   \
+    mstr *: mstr_news)(SRC)
 
 mstr *mstr_new_g(size_t size, size_t len, char *str);
 mstr *mstr_newc(char *str);
@@ -43,19 +43,30 @@ mstr *mstr_newl(size_t size);
 
 // void mstr_clear(mstr *s);
 
-#define mstr_append(D, S) _Generic((S), \
-    char *: mstr_appendc,               \
-    mstr *: mstr_appends)(D, S)
+#define mstr_append(DST, SRC) _Generic((SRC), \
+    char *: mstr_append_c,                    \
+    mstr *: mstr_append_s)(DST, SRC)
 void mstr_append_g(mstr *dst, char *src, size_t len);
-void mstr_appendc(mstr *dst, char *src);
-void mstr_appends(mstr *dst, mstr *src);
+void mstr_append_c(mstr *dst, char *src);
+void mstr_append_s(mstr *dst, mstr *src);
 
-#define mstr_prepend(D, S) _Generic((S), \
-    char *: mstr_prepend_c,              \
-    mstr *: mstr_prepend_s)(D, S)
+#define mstr_prepend(DST, SRC) _Generic((SRC), \
+    char *: mstr_prepend_c,                    \
+    mstr *: mstr_prepend_s)(DST, SRC)
 void mstr_prepend_g(mstr *dst, char *src, size_t len);
 void mstr_prepend_c(mstr *dst, char *src);
 void mstr_prepend_s(mstr *dst, mstr *src);
+
+// #define mstr_insert(DST, SRC, POS) _Generic((SRC),     \
+//     char *: mstr_insert_g(DST, SRC, strlen(SRC), POS), \
+//     mstr *: mstr_insert_g(DST, SRC->str, SRC->len, POS))
+
+#define mstr_insert(DST, SRC, POS) _Generic((SRC), \
+    char *: mstr_insert_c,                         \
+    mstr *: mstr_insert_s)(DST, SRC, POS)
+void mstr_insert_g(mstr *dst, char *src, size_t len, int pos);
+void mstr_insert_c(mstr *dst, char *src, int pos);
+void mstr_insert_s(mstr *dst, mstr *src, int pos);
 
 // char *mstr_to_char(mstr *s);
 

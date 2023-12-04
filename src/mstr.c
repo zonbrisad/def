@@ -13,21 +13,40 @@
  *
  */
 
-#include <stdlib.h>
-#include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <string.h>
+#include <stdbool.h>
 #include <assert.h>
 #include "mstr.h"
-#include <stdbool.h>
-#include <stdarg.h>
+
+void mstr_move(mstr *dst, int pos, int moves)
+{
+  // move existing text forward
+  for (int i = dst->len - 1; i >= pos; i--)
+  {
+    dst->str[i + moves] = dst->str[i];
+  }
+  dst->len += moves;
+  dst->str[dst->len] = '\0';
+}
+
+void mstr_copy(mstr *dst, char *src, int pos, int len)
+{
+  // copy new text from src
+  for (size_t i = 0; i < len; i++)
+  {
+    dst->str[i + pos] = src[i];
+  }
+}
 
 mstr *mstr_new_g(size_t size, size_t len, char *str)
 {
   mstr *mst = (mstr *)malloc(sizeof(mstr));
-  mst->str = (char *)malloc(size);
   mst->size = size;
-  mst->len = len;
-  strncpy(mst->str, str, len);
+  mst->str = (char *)malloc(mst->size);
+  mstr_append(mst, str);
   return mst;
 }
 
@@ -49,17 +68,16 @@ mstr *mstr_newl(size_t size)
 void mstr_append_g(mstr *dst, char *src, size_t len)
 {
   assert(dst->size > (dst->len + len));
-  strncpy(dst->str + dst->len, src, len);
-  dst->len += len;
-  dst->str[dst->len] = '\0';
+
+  mstr_insert_g(dst, src, len, dst->len);
 }
 
-void mstr_appendc(mstr *mst, char *astr)
+void mstr_append_c(mstr *mst, char *astr)
 {
   mstr_append_g(mst, astr, strlen(astr));
 }
 
-void mstr_appends(mstr *mst, mstr *astr)
+void mstr_append_s(mstr *mst, mstr *astr)
 {
   mstr_append_g(mst, astr->str, astr->len);
 }
@@ -67,17 +85,8 @@ void mstr_appends(mstr *mst, mstr *astr)
 void mstr_prepend_g(mstr *dst, char *src, size_t len)
 {
   assert(dst->size > (dst->len + len));
-  for (int i = dst->len - 1; i >= 0; i--)
-  {
-    dst->str[i + len] = dst->str[i];
-  }
 
-  for (size_t i = 0; i < len; i++)
-  {
-    dst->str[i] = src[i];
-  }
-  dst->len += len;
-  dst->str[dst->len] = '\0';
+  mstr_insert(dst, src, 0);
 }
 
 void mstr_prepend_c(mstr *dst, char *src)
@@ -88,6 +97,24 @@ void mstr_prepend_c(mstr *dst, char *src)
 void mstr_prepend_s(mstr *dst, mstr *src)
 {
   mstr_prepend_g(dst, src->str, src->len);
+}
+
+void mstr_insert_g(mstr *dst, char *src, size_t len, int pos)
+{
+  assert(dst->size > (dst->len + len - pos));
+
+  mstr_move(dst, pos, len);
+  mstr_copy(dst, src, pos, len);
+}
+
+void mstr_insert_c(mstr *dst, char *src, int pos)
+{
+  mstr_insert_g(dst, src, strlen(src), pos);
+}
+
+void mstr_insert_s(mstr *dst, mstr *src, int pos)
+{
+  mstr_insert_g(dst, src->str, src->len, pos);
 }
 
 void mstr_free(mstr *s)

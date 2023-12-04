@@ -302,6 +302,14 @@ int mstr_test()
     mstr_strip(astrip, " ,.!");
     mstr_print(astrip);
 
+    mstr *insert = mstr_new("This incomplete!");
+    mstr_print(insert);
+    mstr_insert(insert, "text ", 5);
+    mstr_print(insert);
+    mstr *insert2 = mstr_new("was ");
+    mstr_insert(insert, insert2, 10);
+    mstr_print(insert);
+
     mstr_print(num);
 }
 
@@ -327,6 +335,8 @@ int main(int argc, char *argv[])
     printf("Binary %s\n", int2bin(buf, 0xAAAA, 16));
     printf("Binary %s\n", int2bin(buf, 0xAAFFAAFF, 32));
     printf("Binary %s\n", int2bin(buf, 0xAAFFAAFF, 48));
+    printf("Builtin Binary %b\n", 0xAAFFAAFF);
+    printf("Builtin Binary %b\n", 0b10101010);
 
     /*
         printf("|||||||+--\n");

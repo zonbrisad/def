@@ -80,9 +80,12 @@ void mstr_strip(mstr *s, char *st);
 
 size_t mstr_len(mstr *s);
 
+bool mstr_is_alpha(mstr *s);
 bool mstr_is_numeric(mstr *s);
-// bool mstr_is_alnum(mstr *s);
-// bool mstr_is_alpha(mstr *s);
+bool mstr_is_alnum(mstr *s);
+
+void mstr_upper(mstr *s);
+void mstr_lower(mstr *s);
 
 void mstr_print(mstr *s);
 

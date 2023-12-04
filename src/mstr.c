@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#include <ctype.h>
 #include <stdbool.h>
 #include <assert.h>
 #include "mstr.h"
@@ -179,24 +180,61 @@ size_t mstr_len(mstr *s)
   return s->len;
 }
 
+bool mstr_is_alpha(mstr *s)
+{
+  for (size_t i = 0; i < s->len; i++)
+  {
+    if (!isalpha(s->str[i]))
+      return false;
+  }
+  return true;
+}
+
 bool mstr_is_numeric(mstr *s)
 {
   for (size_t i = 0; i < s->len; i++)
   {
-    if (s->str[i] < '0' || s->str[i] > '9')
+    // if (s->str[i] < '0' || s->str[i] > '9')
+    if (!isdigit(s->str[i]))
       return false;
   }
   return true;
+}
+
+bool mstr_is_alnum(mstr *s)
+{
+  for (size_t i = 0; i < s->len; i++)
+  {
+    if (!isalnum(s->str[i]))
+      return false;
+  }
+  return true;
+}
+
+void mstr_upper(mstr *s)
+{
+  for (int i = 0; i < s->len; i++)
+  {
+    s->str[i] = toupper(s->str[i]);
+  }
+}
+
+void mstr_lower(mstr *s)
+{
+  for (int i = 0; i < s->len; i++)
+  {
+    s->str[i] = tolower(s->str[i]);
+  }
 }
 
 void mstr_print(mstr *s)
 {
   if (s == NULL)
   {
-    printf("size  length  N  string\n");
+    printf("size  length  A N AN  string\n");
     return;
   }
 
-  printf("%4ld  %6ld  %d  \"%s\"\n", s->size, s->len, mstr_is_numeric(s), s->str);
+  printf("%4ld  %6ld  %d %d  %d  \"%s\"\n", s->size, s->len, mstr_is_alpha(s), mstr_is_numeric(s), mstr_is_alnum(s), s->str);
   // printf("size: %4ld  length: %4ld  %d  str: \"%s\"\n", s->size, s->len, mstr_is_numeric(s), s->str);
 }

@@ -324,6 +324,11 @@ int mstr_test()
     mstr_insert(insert3, "8", -1);
     mstr_print(insert3);
 
+    mstr_upper(ms);
+    mstr_print(ms);
+    mstr_lower(ms);
+    mstr_print(ms);
+
     // mstr_print(insert3);
 }
 

@@ -53,6 +53,12 @@ mstr *mstr_new_g(size_t size, size_t len, char *str)
   return mst;
 }
 
+void mstr_clear(mstr *s)
+{
+  s->len = 0;
+  s->str[0] = '\0';
+}
+
 mstr *mstr_newc(char *str)
 {
   return mstr_new_g(MSTR_SIZE, strlen(str), str);
@@ -118,6 +124,19 @@ void mstr_insert_c(mstr *dst, char *src, int pos)
 void mstr_insert_s(mstr *dst, mstr *src, int pos)
 {
   mstr_insert_g(dst, src->str, src->len, pos);
+}
+
+// int mstr_find(mstr *s, char *x)
+// {
+// }
+
+void mstr_replace(mstr *s, char *old, char *new)
+{
+  char *x;
+  int pos;
+  x = strstr(s->str, old);
+  pos = (int)x - (int)s;
+  printf("x = %d\n", pos);
 }
 
 void mstr_free(mstr *s)
@@ -194,7 +213,6 @@ bool mstr_is_numeric(mstr *s)
 {
   for (size_t i = 0; i < s->len; i++)
   {
-    // if (s->str[i] < '0' || s->str[i] > '9')
     if (!isdigit(s->str[i]))
       return false;
   }
@@ -206,6 +224,16 @@ bool mstr_is_alnum(mstr *s)
   for (size_t i = 0; i < s->len; i++)
   {
     if (!isalnum(s->str[i]))
+      return false;
+  }
+  return true;
+}
+
+bool mstr_is_space(mstr *s)
+{
+  for (size_t i = 0; i < s->len; i++)
+  {
+    if (!isspace(s->str[i]))
       return false;
   }
   return true;
@@ -231,10 +259,10 @@ void mstr_print(mstr *s)
 {
   if (s == NULL)
   {
-    printf("size  length  A N AN  string\n");
+    printf(" size  len A N AN S  string\n");
     return;
   }
 
-  printf("%4ld  %6ld  %d %d  %d  \"%s\"\n", s->size, s->len, mstr_is_alpha(s), mstr_is_numeric(s), mstr_is_alnum(s), s->str);
+  printf(" %4ld %4ld %d %d  %d %d  \"%s\"\n", s->size, s->len, mstr_is_alpha(s), mstr_is_numeric(s), mstr_is_alnum(s), mstr_is_space(s), s->str);
   // printf("size: %4ld  length: %4ld  %d  str: \"%s\"\n", s->size, s->len, mstr_is_numeric(s), s->str);
 }

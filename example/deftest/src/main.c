@@ -329,7 +329,13 @@ int mstr_test()
     mstr_lower(ms);
     mstr_print(ms);
 
-    // mstr_print(insert3);
+    mstr *space = mstr_new("    ");
+    mstr_print(space);
+
+    mstr *replace = mstr_new("A field with a flower, a tree and a bush");
+    mstr_print(replace);
+    mstr_replace(replace, "a tree", "oak");
+    mstr_print(replace);
 }
 
 int main(int argc, char *argv[])

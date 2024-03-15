@@ -260,82 +260,97 @@ int unitTest(void)
     return UNITY_END();
 }
 
+void mstr_printx(mstr *s, char *cmd)
+{
+    if (s == NULL)
+    {
+        printf(" Size  Len A N AN S  Command    String\n");
+        return;
+    }
+
+    printf(" %4ld %4ld %d %d  %d %d  %-10s \"%s\"\n", s->size, s->len, mstr_is_alpha(s), mstr_is_numeric(s), mstr_is_alnum(s), mstr_is_space(s), cmd, s->str);
+}
+
 int mstr_test()
 {
-    mstr *ms = mstr_new("Hello");
     mstr *again = mstr_new(" Again! ");
-    mstr *strip = mstr_new("    Pleace strip   some for   me!!        ");
-    mstr *astrip = mstr_new("  ,!! ..   A more...advanced,,, stripping..  ..,,,     ");
     mstr *num = mstr_new("1234567890");
-    mstr *strip2 = mstr_new(strip);
     mstr *ml = mstr_new(512);
 
     printTextLine("msrt test");
-    mstr_print(NULL);
+    mstr_printx(NULL, "");
 
-    mstr_print(ms);
-    mstr_append(ms, " world!");
-    mstr_print(ms);
-    mstr_append(ms, again);
-    mstr_print(ms);
+    mstr *ms = mstr_new("");
+    mstr_printx(ms, "new");
+
+    mstr_append(ms, "world");
+    mstr_printx(ms, "append");
+
+    mstr_prepend(ms, "Hello ");
+    mstr_printx(ms, "prepend");
 
     mstr *mc = mstr_new(ms);
-    mstr_append(mc, " - Copy");
-    mstr_print(mc);
+    mstr_printx(mc, "new copy");
 
-    mstr_prepend(ms, "Prepended: ");
-    mstr_print(ms);
+    // mstr_prepend(ms, "Prepended: ");
+    // mstr_print(ms);
 
-    mstr_prepend(ms, again);
-    mstr_print(ms);
+    // mstr_prepend(ms, again);
+    // mstr_print(ms);
 
-    mstr_print(strip);
+    mstr *strip = mstr_new("    Pleace strip   some for   me!!        ");
+    mstr_printx(strip, "new");
     mstr_strip(strip, " ");
-    mstr_print(strip);
+    mstr_printx(strip, "strip");
 
+    mstr *strip2 = mstr_new("   Some other striping    ");
+    mstr_printx(strip2, "new");
     mstr_lstrip(strip2, " ");
-    mstr_print(strip2);
+    mstr_printx(strip2, "lstrip");
     mstr_rstrip(strip2, " ");
-    mstr_print(strip2);
+    mstr_printx(strip2, "rstrip");
 
-    mstr_print(astrip);
+    mstr *astrip = mstr_new("  ,!! ..   A more...advanced,,, stripping..  ..,,,     ");
+    mstr_printx(astrip, "new");
     mstr_strip(astrip, " ,.!");
-    mstr_print(astrip);
+    mstr_printx(astrip, "strip");
 
     mstr *insert = mstr_new("This incomplete!");
-    mstr_print(insert);
+    mstr_printx(insert, "new");
     mstr_insert(insert, "text ", 5);
-    mstr_print(insert);
+    mstr_printx(insert, "insert");
     mstr *insert2 = mstr_new("was ");
     mstr_insert(insert, insert2, 10);
-    mstr_print(insert);
+    mstr_printx(insert, "insert");
 
-    mstr *insertbehind = mstr_new("Insert behind!");
-    mstr_print(insertbehind);
+    // mstr *insertbehind = mstr_new("Insert behind!");
+    // mstr_print(insertbehind);
     // mstr_insert(insertbehind, "from ", -8);
     // mstr_print(insertbehind);
 
     mstr *insert3 = mstr_new("235679");
-    mstr_print(insert3);
+    mstr_printx(insert3, "new");
     mstr_insert(insert3, "1", 0);
-    mstr_print(insert3);
+    mstr_printx(insert3, "insert");
     mstr_insert(insert3, "4", 3);
-    mstr_print(insert3);
+    mstr_printx(insert3, "insert");
     mstr_insert(insert3, "8", -1);
-    mstr_print(insert3);
+    mstr_printx(insert3, "insert");
 
-    mstr_upper(ms);
-    mstr_print(ms);
-    mstr_lower(ms);
-    mstr_print(ms);
+    mstr *upplow = mstr_new("HeLo WoRlD");
+    mstr_printx(upplow, "new");
+    mstr_upper(upplow);
+    mstr_printx(upplow, "upper");
+    mstr_lower(upplow);
+    mstr_printx(upplow, "lower");
 
-    mstr *space = mstr_new("    ");
-    mstr_print(space);
+    // mstr *space = mstr_new("    ");
+    // mstr_print(space);
 
     mstr *replace = mstr_new("A field with a flower, a tree and a bush");
-    mstr_print(replace);
+    mstr_printx(replace, "new");
     mstr_replace(replace, "a tree", "oak");
-    mstr_print(replace);
+    mstr_printx(replace, "replace");
 }
 
 int main(int argc, char *argv[])

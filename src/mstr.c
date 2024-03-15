@@ -136,7 +136,7 @@ void mstr_replace(mstr *s, char *old, char *new)
   int pos;
   x = strstr(s->str, old);
   pos = (int)x - (int)s;
-  printf("x = %d\n", pos);
+  // printf("x = %d\n", pos);
 }
 
 void mstr_free(mstr *s)
@@ -259,10 +259,9 @@ void mstr_print(mstr *s)
 {
   if (s == NULL)
   {
-    printf(" size  len A N AN S  string\n");
+    printf(" Size  Len A N AN S  string\n");
     return;
   }
 
   printf(" %4ld %4ld %d %d  %d %d  \"%s\"\n", s->size, s->len, mstr_is_alpha(s), mstr_is_numeric(s), mstr_is_alnum(s), mstr_is_space(s), s->str);
-  // printf("size: %4ld  length: %4ld  %d  str: \"%s\"\n", s->size, s->len, mstr_is_numeric(s), s->str);
 }

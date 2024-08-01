@@ -13,6 +13,7 @@
 // Includes ---------------------------------------------------------------
 
 #include <stdio.h>
+#include <stdarg.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -260,15 +261,30 @@ int unitTest(void)
     return UNITY_END();
 }
 
-void mstr_printx(mstr *s, char *cmd)
+// void mstr_printx(mstr *s, char *cmd)
+void mstr_printx(mstr *s, char *cmd, const char *fmt, ...)
 {
+    char buf[256];
+    va_list args;
+
     if (s == NULL)
     {
         printf(" Size  Len A N AN S  Command    String\n");
         return;
     }
 
-    printf(" %4ld %4ld %d %d  %d %d  %-10s \"%s\"\n", s->size, s->len, mstr_is_alpha(s), mstr_is_numeric(s), mstr_is_alnum(s), mstr_is_space(s), cmd, s->str);
+    printf(" %4ld %4ld %d %d  %d %d  %-10s \"%s\"\n", s->size, s->len, mstr_is_alpha(s), mstr_is_numeric(s), mstr_is_alnum(s), mstr_is_space(s), fmt, s->str);
+
+    // printf(buf, " %4ld %4ld %d %d  %d %d  %-10s \"%s\"", s->size, s->len, mstr_is_alpha(s), mstr_is_numeric(s), mstr_is_alnum(s), mstr_is_space(s), cmd, s->str);
+
+    // va_start(args, fmt);
+    // vfprintf(fmt, args);
+    // for (int i = 0; i < args; i++)
+
+    // printf(" %4ld %4ld %d %d  %d %d  %-10s \"%s\"\n", s->size, s->len, mstr_is_alpha(s), mstr_is_numeric(s), mstr_is_alnum(s), mstr_is_space(s), fmt, s->str);
+    // printf(" %4ld %4ld %d %d  %d %d  %-10s \"%s\"\n", s->size, s->len, mstr_is_alpha(s), mstr_is_numeric(s), mstr_is_alnum(s), mstr_is_space(s), fmt, s->str);
+    // #printf("%s", buf);
+    // va_end(args);
 }
 
 int mstr_test()
@@ -278,19 +294,22 @@ int mstr_test()
     mstr *ml = mstr_new(512);
 
     printTextLine("msrt test");
-    mstr_printx(NULL, "");
+    mstr_printx(NULL, "", "");
 
     mstr *ms = mstr_new("");
-    mstr_printx(ms, "new");
+    mstr_printx(ms, "new", "");
 
     mstr_append(ms, "world");
-    mstr_printx(ms, "append");
+    mstr_printx(ms, "append", "");
 
     mstr_prepend(ms, "Hello ");
-    mstr_printx(ms, "prepend");
+    mstr_printx(ms, "prepend", "");
+
+    mstr_append(ms, "!");
+    mstr_printx(ms, "append", "");
 
     mstr *mc = mstr_new(ms);
-    mstr_printx(mc, "new copy");
+    mstr_printx(mc, "new copy", "");
 
     // mstr_prepend(ms, "Prepended: ");
     // mstr_print(ms);
@@ -299,29 +318,29 @@ int mstr_test()
     // mstr_print(ms);
 
     mstr *strip = mstr_new("    Pleace strip   some for   me!!        ");
-    mstr_printx(strip, "new");
+    mstr_printx(strip, "new", "");
     mstr_strip(strip, " ");
-    mstr_printx(strip, "strip");
+    mstr_printx(strip, "strip", "");
 
     mstr *strip2 = mstr_new("   Some other striping    ");
-    mstr_printx(strip2, "new");
+    mstr_printx(strip2, "new", "");
     mstr_lstrip(strip2, " ");
-    mstr_printx(strip2, "lstrip");
+    mstr_printx(strip2, "lstrip", "");
     mstr_rstrip(strip2, " ");
-    mstr_printx(strip2, "rstrip");
+    mstr_printx(strip2, "rstrip", "");
 
     mstr *astrip = mstr_new("  ,!! ..   A more...advanced,,, stripping..  ..,,,     ");
-    mstr_printx(astrip, "new");
+    mstr_printx(astrip, "new", "");
     mstr_strip(astrip, " ,.!");
-    mstr_printx(astrip, "strip");
+    mstr_printx(astrip, "strip", "");
 
     mstr *insert = mstr_new("This incomplete!");
-    mstr_printx(insert, "new");
+    mstr_printx(insert, "new", "");
     mstr_insert(insert, "text ", 5);
-    mstr_printx(insert, "insert");
+    mstr_printx(insert, "insert", "");
     mstr *insert2 = mstr_new("was ");
     mstr_insert(insert, insert2, 10);
-    mstr_printx(insert, "insert");
+    mstr_printx(insert, "insert", "");
 
     // mstr *insertbehind = mstr_new("Insert behind!");
     // mstr_print(insertbehind);
@@ -329,28 +348,31 @@ int mstr_test()
     // mstr_print(insertbehind);
 
     mstr *insert3 = mstr_new("235679");
-    mstr_printx(insert3, "new");
+    mstr_printx(insert3, "new", "");
     mstr_insert(insert3, "1", 0);
-    mstr_printx(insert3, "insert");
+    mstr_printx(insert3, "insert", "");
     mstr_insert(insert3, "4", 3);
-    mstr_printx(insert3, "insert");
+    mstr_printx(insert3, "insert", "");
     mstr_insert(insert3, "8", -1);
-    mstr_printx(insert3, "insert");
+    mstr_printx(insert3, "insert", "");
 
     mstr *upplow = mstr_new("HeLo WoRlD");
-    mstr_printx(upplow, "new");
+    mstr_printx(upplow, "new", "");
     mstr_upper(upplow);
-    mstr_printx(upplow, "upper");
+    mstr_printx(upplow, "upper", "");
     mstr_lower(upplow);
-    mstr_printx(upplow, "lower");
+    mstr_printx(upplow, "lower", "");
 
     // mstr *space = mstr_new("    ");
     // mstr_print(space);
 
     mstr *replace = mstr_new("A field with a flower, a tree and a bush");
-    mstr_printx(replace, "new");
+    mstr_printx(replace, "new", "");
     mstr_replace(replace, "a tree", "oak");
-    mstr_printx(replace, "replace");
+    mstr_printx(replace, "replace", "");
+
+    // mstr *number = mstr_new("091234");
+    // mstr_printx(replace, "Tro")
 }
 
 int main(int argc, char *argv[])
@@ -377,6 +399,7 @@ int main(int argc, char *argv[])
     printf("Binary %s\n", int2bin(buf, 0xAAFFAAFF, 48));
     printf("Builtin Binary %b\n", 0xAAFFAAFF);
     printf("Builtin Binary %b\n", 0b10101010);
+    printf("Builtin Binary %016b\n", 0b10101010);
 
     /*
         printf("|||||||+--\n");

@@ -34,7 +34,7 @@ void mstr_move(mstr *dst, int pos, int moves)
   dst->str[dst->len] = '\0';
 }
 
-void mstr_copy(mstr *dst, char *src, int pos, int len)
+void mstr_copy(mstr *dst, char *src, int pos, size_t len)
 {
   int pos_x = ((pos >= 0) ? pos : (dst->len + pos - 1));
   // copy new text from src
@@ -241,7 +241,7 @@ bool mstr_is_space(mstr *s)
 
 void mstr_upper(mstr *s)
 {
-  for (int i = 0; i < s->len; i++)
+  for (size_t i = 0; i < s->len; i++)
   {
     s->str[i] = toupper(s->str[i]);
   }
@@ -249,7 +249,7 @@ void mstr_upper(mstr *s)
 
 void mstr_lower(mstr *s)
 {
-  for (int i = 0; i < s->len; i++)
+  for (size_t i = 0; i < s->len; i++)
   {
     s->str[i] = tolower(s->str[i]);
   }

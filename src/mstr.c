@@ -20,6 +20,7 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include <assert.h>
+#include <stdint.h>
 #include "mstr.h"
 
 void mstr_move(mstr *dst, int pos, int moves)
@@ -44,11 +45,11 @@ void mstr_copy(mstr *dst, char *src, int pos, size_t len)
   }
 }
 
-mstr *mstr_new_g(size_t size, size_t len, char *str)
+mstr *mstr_new_g(size_t capacity, size_t len, char *str)
 {
   mstr *mst = (mstr *)malloc(sizeof(mstr));
-  mst->size = size;
-  mst->str = (char *)malloc(mst->size);
+  mst->capacity = capacity;
+  mst->str = (char *)malloc(mst->capacity);
   mstr_append(mst, str);
   return mst;
 }
@@ -61,12 +62,14 @@ void mstr_clear(mstr *s)
 
 mstr *mstr_newc(char *str)
 {
-  return mstr_new_g(MSTR_SIZE, strlen(str), str);
+  size_t len;
+  len = strlen(str);
+  return mstr_new_g(len, len, str);
 }
 
 mstr *mstr_news(mstr *src)
 {
-  return mstr_new_g(MSTR_SIZE, src->len, src->str);
+  return mstr_new_g(src->len, src->len, src->str);
 }
 
 mstr *mstr_newl(size_t size)
@@ -74,11 +77,30 @@ mstr *mstr_newl(size_t size)
   return mstr_new_g(size, 0, "");
 }
 
-void mstr_append_g(mstr *dst, char *src, size_t len)
+void mstr_reallocate(mstr *dst, size_t new_len)
 {
-  assert(dst->size > (dst->len + len));
+  char *new_str;
+  size_t new_capacity;
 
-  mstr_insert_g(dst, src, len, dst->len);
+  new_capacity = ((new_len / MSTR_BLOCK) + 1) * MSTR_BLOCK;
+
+  new_str = (char *)malloc(new_capacity);
+  strncpy(new_str, dst->str, dst->len);
+  free(dst->str);
+  dst->capacity = new_capacity;
+  dst->str = new_str;
+}
+
+void mstr_append_g(mstr *dst, char *src, size_t src_len)
+{
+  if (dst->capacity <= (dst->len + src_len))
+  {
+    mstr_reallocate(dst, dst->len + src_len);
+  }
+
+  assert(dst->capacity > (dst->len + src_len));
+
+  mstr_insert_g(dst, src, src_len, dst->len);
 }
 
 void mstr_append_c(mstr *mst, char *astr)
@@ -93,7 +115,7 @@ void mstr_append_s(mstr *mst, mstr *astr)
 
 void mstr_prepend_g(mstr *dst, char *src, size_t len)
 {
-  assert(dst->size > (dst->len + len));
+  assert(dst->capacity > (dst->len + len));
 
   mstr_insert(dst, src, 0);
 }
@@ -110,7 +132,12 @@ void mstr_prepend_s(mstr *dst, mstr *src)
 
 void mstr_insert_g(mstr *dst, char *src, size_t len, int pos)
 {
-  assert(dst->size > (dst->len + len - pos));
+
+  if (dst->capacity <= (dst->len + len))
+  {
+    mstr_reallocate(dst, dst->len + len);
+  }
+  assert(dst->capacity > (dst->len + len - pos));
 
   mstr_move(dst, pos, len);
   mstr_copy(dst, src, pos, len);
@@ -259,9 +286,9 @@ void mstr_print(mstr *s)
 {
   if (s == NULL)
   {
-    printf(" Size  Len A N AN S  string\n");
+    printf(" Capacity  Len A N AN S  string\n");
     return;
   }
 
-  printf(" %4ld %4ld %d %d  %d %d  \"%s\"\n", s->size, s->len, mstr_is_alpha(s), mstr_is_numeric(s), mstr_is_alnum(s), mstr_is_space(s), s->str);
+  printf("      %4ld %4ld %d %d  %d %d  \"%s\"\n", s->capacity, s->len, mstr_is_alpha(s), mstr_is_numeric(s), mstr_is_alnum(s), mstr_is_space(s), s->str);
 }

@@ -23,11 +23,12 @@ extern "C"
 #endif
 
 #define MSTR_SIZE 1024
+#define MSTR_BLOCK 16
 
     typedef struct mstr_t
 {
     char *str;
-    size_t size;
+    size_t capacity;
     size_t len;
 } mstr;
 
@@ -36,7 +37,7 @@ extern "C"
     int: mstr_newl,                   \
     mstr *: mstr_news)(SRC)
 
-mstr *mstr_new_g(size_t size, size_t len, char *str);
+mstr *mstr_new_g(size_t capacity, size_t len, char *str);
 mstr *mstr_newc(char *str);
 mstr *mstr_news(mstr *mstr);
 mstr *mstr_newl(size_t size);
@@ -46,7 +47,7 @@ void mstr_clear(mstr *s);
 #define mstr_append(DST, SRC) _Generic((SRC), \
     char *: mstr_append_c,                    \
     mstr *: mstr_append_s)(DST, SRC)
-void mstr_append_g(mstr *dst, char *src, size_t len);
+void mstr_append_g(mstr *dst, char *src, size_t src_len);
 void mstr_append_c(mstr *dst, char *src);
 void mstr_append_s(mstr *dst, mstr *src);
 

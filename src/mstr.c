@@ -115,6 +115,7 @@ void mstr_append_s(mstr *mst, mstr *astr)
 
 void mstr_prepend_g(mstr *dst, char *src, size_t len)
 {
+  mstr_reallocate(dst, (dst->len + len));
   assert(dst->capacity > (dst->len + len));
 
   mstr_insert(dst, src, 0);
@@ -228,6 +229,9 @@ size_t mstr_len(mstr *s)
 
 bool mstr_is_alpha(mstr *s)
 {
+  if (s->len == 0)
+    return false;
+
   for (size_t i = 0; i < s->len; i++)
   {
     if (!isalpha(s->str[i]))
@@ -238,6 +242,9 @@ bool mstr_is_alpha(mstr *s)
 
 bool mstr_is_numeric(mstr *s)
 {
+  if (s->len == 0)
+    return false;
+
   for (size_t i = 0; i < s->len; i++)
   {
     if (!isdigit(s->str[i]))
@@ -248,6 +255,9 @@ bool mstr_is_numeric(mstr *s)
 
 bool mstr_is_alnum(mstr *s)
 {
+  if (s->len == 0)
+    return false;
+
   for (size_t i = 0; i < s->len; i++)
   {
     if (!isalnum(s->str[i]))
@@ -258,12 +268,23 @@ bool mstr_is_alnum(mstr *s)
 
 bool mstr_is_space(mstr *s)
 {
+  if (s->len == 0)
+    return false;
+
   for (size_t i = 0; i < s->len; i++)
   {
     if (!isspace(s->str[i]))
       return false;
   }
   return true;
+}
+
+bool mstr_is_empty(mstr *s)
+{
+  if (s->len == 0)
+    return true;
+
+  return false;
 }
 
 void mstr_upper(mstr *s)

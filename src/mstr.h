@@ -83,6 +83,7 @@ bool mstr_is_alpha(mstr *s);
 bool mstr_is_numeric(mstr *s);
 bool mstr_is_alnum(mstr *s);
 bool mstr_is_space(mstr *s);
+bool mstr_is_empty(mstr *s);
 
 void mstr_upper(mstr *s);
 void mstr_lower(mstr *s);

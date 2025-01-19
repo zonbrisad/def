@@ -269,11 +269,11 @@ void mstr_printx(mstr *s, char *cmd, const char *fmt, ...)
 
     if (s == NULL)
     {
-        printf(" Capacity  Len A N AN S  Command    String\n");
+        printf(" Length  Capacity  Alpha  Numeric Alfanumeric Space Empty Command    String\n");
         return;
     }
 
-    printf("     %4ld %4ld %d %d  %d %d  %-10s \"%s\"\n", s->capacity, s->len, mstr_is_alpha(s), mstr_is_numeric(s), mstr_is_alnum(s), mstr_is_space(s), fmt, s->str);
+    printf(" %4ld     %4ld       %d       %d         %d        %d     %d %-10s   \"%s\"\n", s->len, s->capacity, mstr_is_alpha(s), mstr_is_numeric(s), mstr_is_alnum(s), mstr_is_space(s), mstr_is_empty(s), fmt, s->str);
 
     // Alternative mode
     // printf(buf, " %4ld %4ld %d %d  %d %d  %-10s \"%s\"", s->size, s->len, mstr_is_alpha(s), mstr_is_numeric(s), mstr_is_alnum(s), mstr_is_space(s), cmd, s->str);
@@ -306,7 +306,7 @@ int mstr_test()
     mstr_prepend(ms, "Hello ");
     mstr_printx(ms, "prepend", "");
 
-    mstr_append(ms, "!");
+    mstr_append(ms, "! Some more text to trigger reallocation.");
     mstr_printx(ms, "append", "");
 
     mstr *mc = mstr_new(ms);
@@ -357,7 +357,7 @@ int mstr_test()
     mstr_insert(insert3, "8", -1);
     mstr_printx(insert3, "insert", "");
 
-    mstr *upplow = mstr_new("HeLo WoRlD");
+    mstr *upplow = mstr_new("HeLlo WoRlD");
     mstr_printx(upplow, "new", "");
     mstr_upper(upplow);
     mstr_printx(upplow, "upper", "");
@@ -374,6 +374,9 @@ int mstr_test()
 
     // mstr *number = mstr_new("091234");
     // mstr_printx(replace, "Tro")
+
+    mstr_clear(ms);
+    mstr_printx(ms, "clear", "");
 }
 
 int main(int argc, char *argv[])

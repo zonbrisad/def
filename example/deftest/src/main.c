@@ -260,7 +260,13 @@ int unitTest(void)
 
     return UNITY_END();
 }
+bool is_null_terminated(mstr *str)
+{
+    if (str->str[str->len] == '\0')
+        return true;
 
+    return false;
+}
 // void mstr_printx(mstr *s, char *cmd)
 void mstr_printx(mstr *s, char *cmd, const char *fmt, ...)
 {
@@ -269,11 +275,11 @@ void mstr_printx(mstr *s, char *cmd, const char *fmt, ...)
 
     if (s == NULL)
     {
-        printf(" Length  Capacity  Alpha  Numeric Alfanumeric Space Empty Command    String\n");
+        printf(" Length  Capacity  Alpha  Numeric Alfanumeric Space Empty NT Command    String\n");
         return;
     }
 
-    printf(" %4ld     %4ld       %d       %d         %d        %d     %d %-10s   \"%s\"\n", s->len, s->capacity, mstr_is_alpha(s), mstr_is_numeric(s), mstr_is_alnum(s), mstr_is_space(s), mstr_is_empty(s), fmt, s->str);
+    printf(" %4ld     %4ld       %d       %d         %d        %d     %d    %d %-10s   \"%s\"\n", s->len, s->capacity, mstr_is_alpha(s), mstr_is_numeric(s), mstr_is_alnum(s), mstr_is_space(s), mstr_is_empty(s), is_null_terminated(s), fmt, s->str);
 
     // Alternative mode
     // printf(buf, " %4ld %4ld %d %d  %d %d  %-10s \"%s\"", s->size, s->len, mstr_is_alpha(s), mstr_is_numeric(s), mstr_is_alnum(s), mstr_is_space(s), cmd, s->str);
@@ -295,6 +301,8 @@ int mstr_test()
     mstr *ml = mstr_new(512);
 
     printTextLine("msrt test");
+    printf("\nMSTR_BLOCK: %2d\nMSTR_EXTRA: %2d\n\n", MSTR_BLOCK, MSTR_EXTRA);
+
     mstr_printx(NULL, "", "");
 
     mstr *ms = mstr_new("");
@@ -347,9 +355,9 @@ int mstr_test()
     // mstr_print(insertbehind);
     // mstr_insert(insertbehind, "from ", -8);
     // mstr_print(insertbehind);
-
     mstr *insert3 = mstr_new("235679");
     mstr_printx(insert3, "new", "");
+
     mstr_insert(insert3, "1", 0);
     mstr_printx(insert3, "insert", "");
     mstr_insert(insert3, "4", 3);
@@ -377,6 +385,11 @@ int mstr_test()
 
     mstr_clear(ms);
     mstr_printx(ms, "clear", "");
+
+    mstr *no_termination = mstr_new("No termination");
+    no_termination->str[no_termination->len] = '!';
+    no_termination->str[no_termination->len + 1] = '\0';
+    mstr_printx(no_termination, "", "");
 }
 
 int main(int argc, char *argv[])

@@ -23,7 +23,8 @@ extern "C"
 #endif
 
 #define MSTR_SIZE 1024
-#define MSTR_BLOCK 16
+#define MSTR_BLOCK 8
+#define MSTR_EXTRA 4
 
     typedef struct mstr_t
 {
@@ -37,7 +38,7 @@ extern "C"
     int: mstr_newl,                   \
     mstr *: mstr_news)(SRC)
 
-mstr *mstr_new_g(size_t capacity, size_t len, char *str);
+mstr *mstr_new_g(size_t required_capacity, char *src);
 mstr *mstr_newc(char *str);
 mstr *mstr_news(mstr *mstr);
 mstr *mstr_newl(size_t size);
@@ -58,8 +59,8 @@ void mstr_prepend_g(mstr *dst, char *src, size_t len);
 void mstr_prepend_c(mstr *dst, char *src);
 void mstr_prepend_s(mstr *dst, mstr *src);
 
-// #define mstr_insert(DST, SRC, POS) _Generic((SRC),     \
-//     char *: mstr_insert_g(DST, SRC, strlen(SRC), POS), \
+// #define mstr_insert(DST, SRC, POS) _Generic((SRC),
+//     char *: mstr_insert_g(DST, SRC, strlen(SRC), POS),
 //     mstr *: mstr_insert_g(DST, SRC->str, SRC->len, POS))
 
 #define mstr_insert(DST, SRC, POS) _Generic((SRC), \

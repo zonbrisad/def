@@ -81,6 +81,7 @@ void mstr_allocate_capacity(mstr *dst, size_t required_capacity)
   dst->str = new_str;
 }
 
+void mstr_assert_capacity(mstr *mst, size_t required_capacity);
 void mstr_assert_capacity(mstr *mst, size_t required_capacity)
 {
   if (((int)mst->capacity - (int)required_capacity) < MSTR_EXTRA)
@@ -186,11 +187,11 @@ void mstr_insert_s(mstr *dst, mstr *src, int pos)
 
 void mstr_replace(mstr *s, char *old, char *new)
 {
-  char *x;
-  int pos;
-  x = strstr(s->str, old);
-  pos = (int)x - (int)s;
-  // printf("x = %d\n", pos);
+  // char *x;
+  // int pos;
+  //  x = strstr(s->str, old);
+  //  pos = (int)x - (int)s;
+  //  printf("x = %d\n", pos);
 }
 
 void mstr_free(mstr *s)
@@ -308,6 +309,22 @@ bool mstr_is_space(mstr *s)
 bool mstr_is_empty(mstr *s)
 {
   if (s->len == 0)
+    return true;
+
+  return false;
+}
+
+bool mstr_startwidth(mstr *s, char *start)
+{
+  if (strncmp(s->str, start, strlen(start)) == 0)
+    return true;
+  return false;
+}
+
+bool mstr_is_null_terminated(mstr *str);
+bool mstr_is_null_terminated(mstr *str)
+{
+  if (str->str[str->len] == '\0')
     return true;
 
   return false;

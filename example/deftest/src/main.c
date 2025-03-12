@@ -272,6 +272,7 @@ void mstr_printx(mstr *s, char *cmd, const char *fmt, ...)
 {
     char buf[256];
     va_list args;
+    UNUSED(args);
 
     if (s == NULL)
     {
@@ -373,7 +374,7 @@ int mstr_test()
     mstr_printx(upplow, "lower", "");
 
     // mstr *space = mstr_new("    ");
-    // mstr_print(space);
+    // mstr_printx(space);
 
     mstr *replace = mstr_new("A field with a flower, a tree and a bush");
     mstr_printx(replace, "new", "");
@@ -390,6 +391,9 @@ int mstr_test()
     no_termination->str[no_termination->len] = '!';
     no_termination->str[no_termination->len + 1] = '\0';
     mstr_printx(no_termination, "", "");
+
+    TEST_ASSERT_TRUE_MESSAGE(mstr_startwidth(upplow, "hello"), "Startwidth failed");
+    TEST_ASSERT_FALSE_MESSAGE(mstr_startwidth(upplow, "XXXhello"), "Startwidth failed");
 }
 
 int main(int argc, char *argv[])

@@ -80,9 +80,7 @@ tparty=(
 
 argtable() {
   bpInfo "Unpacking $1"
-#  tar --dir ${DOWNLOAD} -xvzf ${DOWNLOAD}/$(basename "$1")
   tar --dir ${DOWNLOAD} -xvzf ${DOWNLOAD}/$(basename "$1")
-#	tar --dir ${DOWNLOAD} -xvzf $(basename "$1")
   bpOk "Argtable"
 }
 
@@ -123,17 +121,13 @@ dict() { ##D Dictionary datastrcutures
 ##- 3dparty
 
 uart() { ##D Install Peter Fleury's AVR uart library
-  bpCp "${DOWNLOAD}/pfleury/uart.h" "$2"
-	bpCp "${DOWNLOAD}/pfleury/uart.c" "$2"
+  bpCp "${DOWNLOAD}/pfleury/uart.h" "${2:-.}"
+	bpCp "${DOWNLOAD}/pfleury/uart.c" "${2:-.}"
 }
 
 argt() { ##D Install argtable3 library
   bpCp "${DOWNLOAD}/dist/argtable3.h" "${2:-.}"
 	bpCp "${DOWNLOAD}/dist/argtable3.c" "${2:-.}"
-#	bpCp "${DOWNLOAD}/argtable3/src/argtable3.h" "$2"
-#	bpCp "${DOWNLOAD}/argtable3/src/argtable3.c" "$2"
-	
-#	bpCp "${DOWNLOAD}/argtable3/src/argtable3_private.h" "$2"
 }
 
 

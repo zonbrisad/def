@@ -47,14 +47,11 @@ bpUserSettings() {
 
 ##- Def
 
-
-
 def_src=(
   "src/def.h"
 )
 
 def_avr_src=(
-  "src/def.h"
   "src/def_avr.h"
 )
 

@@ -205,9 +205,11 @@ edefa() { ##D Edit def_avr.h
 
 ddef() { ##D Run diff program on external def.h
   $BP_DIFF "${BP_SELF_DIR}/src/def.h" "$2"
-
 }
 
+ddefa() { ##D Run diff program on external def_avr.h
+  $BP_DIFF "${BP_SELF_DIR}/src/def_avr.h" "$2"
+}
 
 #---------------------------------------------------------------------
 # Bashplate settings

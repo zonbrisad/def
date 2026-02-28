@@ -27,7 +27,7 @@
 
 #include "uart.h"
 #include "main.h"
-#include "def_avr_i.h"
+#include "def_avr.h"
 
 // Macros -------------------------------------------------------------------
 

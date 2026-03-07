@@ -47,6 +47,25 @@ static FILE mystdout = FDEV_SETUP_STREAM((void*)uart_putc, NULL, _FDEV_SETUP_WRI
 volatile uint16_t timer1Counter = 0;
 // Code ---------------------------------------------------------------------
 
+// void wdt_first_disable(void) __attribute__((naked)) __attribute__((section(".init3")));
+// void wdt_first_disable(void) {
+//     wdt_disable();
+// }
+
+
+// This runs extremely early – right after vector table, before normal init / bootloader jump
+void get_mcusr(void) \
+  __attribute__((naked)) \
+  __attribute__((section(".init3")));
+void get_mcusr(void)
+{
+    cli();                      // Disable interrupts (recommended)
+    MCUSR = 0;                  // ← Critical: clear ALL reset flags, especially WDRF
+    wdt_disable();              // Safe disable sequence
+}
+
+
+
 ISR(TIMER1_COMPA_vect) {
   TIMER1_RELOAD(0);
   printf("Timer %u\n", timer1Counter);
@@ -63,13 +82,20 @@ void hw_init(void) {
   sei();  // Enable all interrupts
 } 
 
-int main() {
+void do_reset(void) {
+  printf("\n\nTest complete, resetting...\n\n");
+  _delay_ms(1000);
+  RESET(); // Reset the MCU using the watchdog timer
+} 
+
+int main(void) {
   size_t i;
-
+  
   hw_init();
-
+  
+  //wdt_disable();
   printf("\n\nStarting avr_def.h test\n\n");
-
+  
   if (IS_POWER_ON_RESET()) {
     printf("Power-on reset detected\n");
   }
@@ -82,8 +108,8 @@ int main() {
   if (IS_EXTERNAL_RESET()) {
     printf("External reset detected\n");
   }
-  CLEAR_RESETS();
   printf("\n\n");
+  CLEAR_RESETS();
 
   ADC_ENABLE();
   ADC_REF_AVCC();
@@ -111,6 +137,7 @@ int main() {
   }
   TIMER1_OCA_ID();      // disable output compare A interrupt
   
+  do_reset();
   i = 0;
   while (1) {
     printf("Hello AVR def %d!\n", i);

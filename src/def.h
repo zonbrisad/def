@@ -914,18 +914,31 @@ typedef unsigned long ulong;
 
 // ANSI movement codes ------------------------------------------------------
 
-#define E_UP "\e[A"      // cursor up one line
-#define E_DOWN "\e[B"    // cursor down one lin
-#define E_FORWARD "\e[C" // cursor right one character
-#define E_BACK "\e[D"    // cursor left one charachter
-#define E_CNL "\e[E"     // Cursor next line, move cursor to begining of next line
-#define E_CPL "\e[F"     // Cursor previous line, move cursor to begining of previous line
+#define E_UP "\e[A"                // cursor up one line
+#define E_DOWN "\e[B"              // cursor down one lin
+#define E_FORWARD "\e[C"           // cursor right one character
+#define E_BACK "\e[D"              // cursor left one charachter
+#define E_CUR_NEXT_LINE "\e[E"     // Cursor next line, move cursor to begining of next line
+#define E_CUR_PREVIOUS_LINE "\e[F" // Cursor previous line, move cursor to begining of previous line
+
+#define E_SAVE_CURSOR_POS "\e[s"
+#define E_RESTORE_CURSOR_POS "\e[u"
+#define E_CUR_POS(n, m) "\e[" #n ";" #m "H" // Cursor position, move cursor to row "n", column "m"
+
+#define E_ERASE_DISPLAY_TO_END "\e[0J"      // Clear from cursor to end of display
+#define E_ERASE_DISPLAY_TO_BEGINING "\e[1J" // Clear from cursor to begining of display
+#define E_ERASE_DISPLAY "\e[2J"             // Clear all display
+
+#define E_ERASE_LINE_TO_END "\e[0K"      // Erase in line from cursor to end of line
+#define E_ERASE_LINE_TO_BEGINING "\e[1K" // Erase in line from cursor to begining of line
+
+#define E_INSERT_LINE "\e[1L" // Insert line at cursor, current line move down
+#define E_DELETE_LINE "\e[1M" // Delete line at cursor, lines bellow move up
 
 #define E_HOME "\e[H" // cursor to left upper corner
 
 #define E_HIDE "\e[?25l" // hide cursor
 #define E_SHOW "\e[?25h" // show cursor
-
 
 // String formating ---------------------------------------------------------
 
@@ -1099,3 +1112,40 @@ static inline char* int2bin(char* buf, uint32_t val, uint8_t bits) {
 #define WEAK __attribute__((weak))
 #define WEAKA(a) __attribute__((weak, alias(a)))
 
+// Misc -----------------------------------------------------------------------
+
+static inline void print_info(char* a, char* b) {
+    defprintf("%-20s    %s\n", a, b);
+}
+
+static inline void print_sysinfo(void) {
+    char buf[16];
+    print_info("Build:", __DATE__ "  " __TIME__);
+    print_info("C Standard:", STRINGIZE(__STDC_VERSION__));
+
+#ifdef __GNUC__
+    print_info("GNU C ver:", __GNUC_VERSION__);
+#endif
+
+#ifdef __BIG_ENDIAN__
+    print_info("Byteorder:", "big endian");
+#endif
+#ifdef __LITTLE_ENDIAN__
+    print_info("Byteorder:", "little endian");
+#endif
+
+#ifdef __cplusplus
+    print_info("C++:", "enabled");
+#endif
+
+#ifdef __OPTIMIZE__
+#ifdef __OPTIMIZE_SIZE__
+    print_info("Optimization, size:", "Enabled");
+#else
+    print_info("Optimization:", "Enabled");
+#endif
+#endif
+
+    sprintf(buf, "%d", sizeof(void*));
+    print_info("Pointer size:", buf);
+}

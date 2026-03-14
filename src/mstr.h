@@ -10,11 +10,15 @@
  *
  *---------------------------------------------------------------------------
  *
- *
+ * @todo
+ * Convert mstr_new to a one malloc function by moving *str to last pos in struct
  */
 
-#ifndef _MSTR_H_
-#define _MSTR_H_
+#pragma once
+
+#define MSTR_SIZE 1024
+#define MSTR_BLOCK 8
+#define MSTR_EXTRA 4
 
 #include <stdbool.h>
 
@@ -22,12 +26,8 @@
 extern "C"
 #endif
 
-#define MSTR_SIZE 1024
-#define MSTR_BLOCK 8
-#define MSTR_EXTRA 4
 
-    typedef struct mstr_t
-{
+typedef struct mstr_t {
     char *str;
     size_t capacity;
     size_t len;
@@ -72,7 +72,7 @@ void mstr_insert_s(mstr *dst, mstr *src, int pos);
 
 void mstr_free(mstr *mstr);
 
-void mstr_replace(mstr *s, char *old, char *new);
+// void mstr_replace(mstr *s, char *old, char *new);
 
 void mstr_rstrip(mstr *s, char *st);
 void mstr_lstrip(mstr *s, char *st);
@@ -91,8 +91,6 @@ void mstr_upper(mstr *s);
 void mstr_lower(mstr *s);
 
 void mstr_print(mstr *s);
-
-#endif // _MSTR_H_
 
 #ifdef __cplusplus
 } // end brace for extern "C"

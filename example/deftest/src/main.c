@@ -48,7 +48,7 @@ void S2S_test(void);
 void I2I_test(void);
 void defTest(void);
 int unitTest(void);
-
+int mstr_test(void);
 // Code -------------------------------------------------------------------
 
 // void escapeFilter(char *str) {
@@ -86,15 +86,13 @@ S2S bgColors[] = {
     {E_BG_WHITE, "White"},
     {S2S_END}};
 
-void colorTest(void)
-{
+void colorTest(void) {
     int i, j;
 
-    for (j = 0; j < S2S_len(bgColors); j++)
-    {
-        for (i = 0; i < S2S_len(fgColors); i++)
-        {
-            printf("%s%s %s " E_RESET, bgColors[j].key, fgColors[i].key, fgColors[i].value);
+    for (j = 0; j < S2S_len(bgColors); j++) {
+        for (i = 0; i < S2S_len(fgColors); i++) {
+            printf("%s%s %s " E_RESET, bgColors[j].key, fgColors[i].key,
+                   fgColors[i].value);
         }
 
         printf("\n");
@@ -108,16 +106,14 @@ void colorTest(void)
     printf("\n");
 }
 
-void sigInt(int sig)
-{
+void sigInt(int sig) {
     UNUSED(sig);
 
     printf("\nExiting program\n");
     exit(0);
 }
 
-void sigHup(int sig)
-{
+void sigHup(int sig) {
     UNUSED(sig);
     printf("Sighup\n");
 }
@@ -130,16 +126,13 @@ I2S numbersDb[] = {
     {I2S_END},
 };
 
-void setUp(void)
-{
+void setUp(void) {
 }
 
-void tearDown(void)
-{
+void tearDown(void) {
 }
 
-void I2S_test(void)
-{
+void I2S_test(void) {
     I2S *db;
 
     db = I2S_copy(numbersDb);
@@ -167,8 +160,7 @@ int ia[] = {12, 33, 54, 11, 412, -443};
 
 int ix[] = {44, 33, 54, 11, 412, -443};
 
-void S2S_test(void)
-{
+void S2S_test(void) {
     S2S *db;
     db = fgColors;
 
@@ -187,8 +179,7 @@ i2i ii[] = {
     {5, 555},
     {I2I_END}};
 
-void I2I_test(void)
-{
+void I2I_test(void) {
     i2i *db;
 
     db = ii;
@@ -213,8 +204,7 @@ void I2I_test(void)
     i2i_printDb(ii);
 }
 
-void defTest(void)
-{
+void defTest(void) {
     TEST_ASSERT_EQUAL_INT(10, Max(10, 5));
     TEST_ASSERT_EQUAL_INT(10, Max(5, 10));
     TEST_ASSERT_EQUAL_INT(5, Max(5, -10));
@@ -247,8 +237,7 @@ void defTest(void)
     TEST_ASSERT_FALSE(isOutside(5, -10, 10));
 }
 
-int unitTest(void)
-{
+int unitTest(void) {
 
     printf("Swap %X\n", Swap16(0xFF00));
 
@@ -260,19 +249,20 @@ int unitTest(void)
 
     return UNITY_END();
 }
-bool is_null_terminated(mstr *str)
-{
+inline bool is_null_terminated(mstr *str) {
     if (str->str[str->len] == '\0')
         return true;
 
     return false;
 }
-// void mstr_printx(mstr *s, char *cmd)
-void mstr_printx(mstr *s, char *cmd, const char *fmt, ...)
-{
-    char buf[256];
+
+void mstr_printx(mstr *s, char *cmd, const char *fmt, ...);
+void mstr_printx(mstr *s, char *cmd, const char *fmt, ...) {
+    // char buf[256];
     va_list args;
     UNUSED(args);
+    UNUSED(cmd);
+
 
     if (s == NULL)
     {
@@ -295,11 +285,11 @@ void mstr_printx(mstr *s, char *cmd, const char *fmt, ...)
     // va_end(args);
 }
 
-int mstr_test()
-{
-    mstr *again = mstr_new(" Again! ");
-    mstr *num = mstr_new("1234567890");
-    mstr *ml = mstr_new(512);
+ 
+int mstr_test(void) {
+    // mstr *again = mstr_new(" Again! ");
+    // mstr *num = mstr_new("1234567890");
+    // mstr *ml = mstr_new(512);
 
     printTextLine("msrt test");
     printf("\nMSTR_BLOCK: %2d\nMSTR_EXTRA: %2d\n\n", MSTR_BLOCK, MSTR_EXTRA);
@@ -376,10 +366,10 @@ int mstr_test()
     // mstr *space = mstr_new("    ");
     // mstr_printx(space);
 
-    mstr *replace = mstr_new("A field with a flower, a tree and a bush");
-    mstr_printx(replace, "new", "");
-    mstr_replace(replace, "a tree", "oak");
-    mstr_printx(replace, "replace", "");
+    // mstr *replace = mstr_new("A field with a flower, a tree and a bush");
+    // mstr_printx(replace, "new", "");
+    // mstr_replace(replace, "a tree", "oak");
+    // mstr_printx(replace, "replace", "");
 
     // mstr *number = mstr_new("091234");
     // mstr_printx(replace, "Tro")
@@ -394,10 +384,11 @@ int mstr_test()
 
     TEST_ASSERT_TRUE_MESSAGE(mstr_startwidth(upplow, "hello"), "Startwidth failed");
     TEST_ASSERT_FALSE_MESSAGE(mstr_startwidth(upplow, "XXXhello"), "Startwidth failed");
+
+    return 0;
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     int x;
     char buf[64];
 
@@ -412,15 +403,23 @@ int main(int argc, char *argv[])
     printSysInfo();
     printf("Path to program: %s\n", getPathToSelf());
 
-    printTextLine("Bits");
-    printf("Binary %s\n", int2bin(buf, 0xAA, 8));
-    printf("Binary %s\n", int2bin(buf, 0xFF, 8));
-    printf("Binary %s\n", int2bin(buf, 0xAAAA, 16));
-    printf("Binary %s\n", int2bin(buf, 0xAAFFAAFF, 32));
-    printf("Binary %s\n", int2bin(buf, 0xAAFFAAFF, 48));
-    printf("Builtin Binary %b\n", 0xAAFFAAFF);
-    printf("Builtin Binary %b\n", 0b10101010);
-    printf("Builtin Binary %016b\n", 0b10101010);
+    printTextLine("Integer to bitstring");
+    
+    printf("int2bin8    %s\n", int2bin8(0xAA));
+    printf("int2bin16   %s\n", int2bin16(0xAAFF));
+    printf("int2bin32   %s\n", int2bin32(0xAAFFAAFF));
+    
+    printf("int2bin  8  %s\n", int2bin(buf, 0b11001100, 8));
+    printf("int2bin 16  %s\n", int2bin(buf, 0xAAFFAAFF, 16));
+    printf("int2bin 32  %s\n", int2bin(buf, 0xAAFFAAFF, 32));
+
+
+    // printf("Builtin Binary %b\n", 0xAAFFAAFF);
+    // printf("Builtin Binary %b\n", 0b10101010);
+    // printf("Builtin Binary %016b\n", 0b10101010);
+
+
+    
 
     /*
         printf("|||||||+--\n");

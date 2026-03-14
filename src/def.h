@@ -39,6 +39,8 @@
 // #define __AVR__
 //  Platform detection ------------------------------------------------------
 
+#pragma once
+
 #if defined(unix) || defined(__unix__) || defined(__unix)
 #define DEF_PLATFORM_UNIX
 #endif
@@ -72,9 +74,6 @@
 #include "def_avr.h"
 #endif
 
-#ifndef DEF_H_
-#define DEF_H_
-
 // Constants --------------------------------------------------------------
 
 /**
@@ -84,15 +83,10 @@
 //! @{
 
 #define PI 3.1415926535897932384626433832795
-
 #define HALF_PI 1.5707963267948966192313216916398
-
 #define TWO_PI 6.283185307179586476925286766559
-
 #define DEG_TO_RAD 0.017453292519943295769236907684886
-
 #define RAD_TO_DEG 57.295779513082320876798154814105
-
 #define EULER 2.718281828459045235360287471352
 
 //! @}
@@ -121,140 +115,131 @@ typedef uint32_t iram_size_t;
 //! @{
 
 //! 16-bit union.
-typedef union
-{
-  S16 s16;
-  U16 u16;
-  S8 s8[2];
-  U8 u8[2];
+typedef union {
+    S16 s16;
+    U16 u16;
+    S8 s8[2];
+    U8 u8[2];
 } Union16;
 
 //! 32-bit union.
-typedef union
-{
-  S32 s32;
-  U32 u32;
-  S16 s16[2];
-  U16 u16[2];
-  S8 s8[4];
-  U8 u8[4];
+typedef union {
+    S32 s32;
+    U32 u32;
+    S16 s16[2];
+    U16 u16[2];
+    S8 s8[4];
+    U8 u8[4];
 } Union32;
 
 //! 64-bit union.
-typedef union
-{
-  S64 s64;
-  U64 u64;
-  S32 s32[2];
-  U32 u32[2];
-  S16 s16[4];
-  U16 u16[4];
-  S8 s8[8];
-  U8 u8[8];
+typedef union {
+    S64 s64;
+    U64 u64;
+    S32 s32[2];
+    U32 u32[2];
+    S16 s16[4];
+    U16 u16[4];
+    S8 s8[8];
+    U8 u8[8];
 } Union64;
 
 //! Union of pointers to 64-, 32-, 16- and 8-bit unsigned integers.
-typedef union
-{
-  S64 *s64ptr;
-  U64 *u64ptr;
-  S32 *s32ptr;
-  U32 *u32ptr;
-  S16 *s16ptr;
-  U16 *u16ptr;
-  S8 *s8ptr;
-  U8 *u8ptr;
+typedef union {
+    S64* s64ptr;
+    U64* u64ptr;
+    S32* s32ptr;
+    U32* u32ptr;
+    S16* s16ptr;
+    U16* u16ptr;
+    S8* s8ptr;
+    U8* u8ptr;
 } UnionPtr;
 
 //! Union of pointers to volatile 64-, 32-, 16- and 8-bit unsigned integers.
-typedef union
-{
-  volatile S64 *s64ptr;
-  volatile U64 *u64ptr;
-  volatile S32 *s32ptr;
-  volatile U32 *u32ptr;
-  volatile S16 *s16ptr;
-  volatile U16 *u16ptr;
-  volatile S8 *s8ptr;
-  volatile U8 *u8ptr;
+typedef union {
+    volatile S64* s64ptr;
+    volatile U64* u64ptr;
+    volatile S32* s32ptr;
+    volatile U32* u32ptr;
+    volatile S16* s16ptr;
+    volatile U16* u16ptr;
+    volatile S8* s8ptr;
+    volatile U8* u8ptr;
 } UnionVPtr;
 
 //! Union of pointers to constant 64-, 32-, 16- and 8-bit unsigned integers.
-typedef union
-{
-  const S64 *s64ptr;
-  const U64 *u64ptr;
-  const S32 *s32ptr;
-  const U32 *u32ptr;
-  const S16 *s16ptr;
-  const U16 *u16ptr;
-  const S8 *s8ptr;
-  const U8 *u8ptr;
+typedef union {
+    const S64* s64ptr;
+    const U64* u64ptr;
+    const S32* s32ptr;
+    const U32* u32ptr;
+    const S16* s16ptr;
+    const U16* u16ptr;
+    const S8* s8ptr;
+    const U8* u8ptr;
 } UnionCPtr;
 
-//! Union of pointers to constant volatile 64-, 32-, 16- and 8-bit unsigned integers.
-typedef union
-{
-  const volatile S64 *s64ptr;
-  const volatile U64 *u64ptr;
-  const volatile S32 *s32ptr;
-  const volatile U32 *u32ptr;
-  const volatile S16 *s16ptr;
-  const volatile U16 *u16ptr;
-  const volatile S8 *s8ptr;
-  const volatile U8 *u8ptr;
+//! Union of pointers to constant volatile 64-, 32-, 16- and 8-bit unsigned
+//! integers.
+typedef union {
+    const volatile S64* s64ptr;
+    const volatile U64* u64ptr;
+    const volatile S32* s32ptr;
+    const volatile U32* u32ptr;
+    const volatile S16* s16ptr;
+    const volatile U16* u16ptr;
+    const volatile S8* s8ptr;
+    const volatile U8* u8ptr;
 } UnionCVPtr;
 
 //! Structure of pointers to 64-, 32-, 16- and 8-bit unsigned integers.
-typedef struct
-{
-  S64 *s64ptr;
-  U64 *u64ptr;
-  S32 *s32ptr;
-  U32 *u32ptr;
-  S16 *s16ptr;
-  U16 *u16ptr;
-  S8 *s8ptr;
-  U8 *u8ptr;
+typedef struct {
+    S64* s64ptr;
+    U64* u64ptr;
+    S32* s32ptr;
+    U32* u32ptr;
+    S16* s16ptr;
+    U16* u16ptr;
+    S8* s8ptr;
+    U8* u8ptr;
 } StructPtr;
 
 //! Structure of pointers to volatile 64-, 32-, 16- and 8-bit unsigned integers.
-typedef struct
-{
-  volatile S64 *s64ptr;
-  volatile U64 *u64ptr;
-  volatile S32 *s32ptr;
-  volatile U32 *u32ptr;
-  volatile S16 *s16ptr;
-  volatile U16 *u16ptr;
-  volatile S8 *s8ptr;
-  volatile U8 *u8ptr;
+typedef struct {
+    volatile S64* s64ptr;
+    volatile U64* u64ptr;
+    volatile S32* s32ptr;
+    volatile U32* u32ptr;
+    volatile S16* s16ptr;
+    volatile U16* u16ptr;
+    volatile S8* s8ptr;
+    volatile U8* u8ptr;
 } StructVPtr;
 
 //! Structure of pointers to constant 64-, 32-, 16- and 8-bit unsigned integers.
-typedef struct
-{
-  const S64 *s64ptr;
-  const U64 *u64ptr;
-  const S32 *s32ptr;
-  const U32 *u32ptr;
-  const S16 *s16ptr;
-  const U16 *u16ptr;
-  const S8 *s8ptr;
-  const U8 *u8ptr;
+typedef struct {
+    const S64* s64ptr;
+    const U64* u64ptr;
+    const S32* s32ptr;
+    const U32* u32ptr;
+    const S16* s16ptr;
+    const U16* u16ptr;
+    const S8* s8ptr;
+    const U8* u8ptr;
 } StructCPtr;
 
-//! Structure of pointers to constant volatile 64-, 32-, 16- and 8-bit unsigned integers.
-typedef struct
-{
-  const volatile S64 *s64ptr;
-  const volatile U64 *u64ptr;
-  const volatile S32 *s32ptr;
-  const volatile U32 *u32ptr;
-  const volatile S16 *s16ptr;
-  const volatile U16 *u16ptr;
-  const volatile S8 *s8ptr;
-  const volatile U8 *u8ptr;
+//! Structure of pointers to constant volatile 64-, 32-, 16- and 8-bit unsigned
+//! integers.
+typedef struct {
+    const volatile S64* s64ptr;
+    const volatile U64* u64ptr;
+    const volatile S32* s32ptr;
+    const volatile U32* u32ptr;
+    const volatile S16* s16ptr;
+    const volatile U16* u16ptr;
+    const volatile S8* s8ptr;
+    const volatile U8* u8ptr;
 } StructCVPtr;
 
 //! @}
@@ -941,6 +926,46 @@ typedef unsigned long ulong;
 #define E_HIDE "\e[?25l" // hide cursor
 #define E_SHOW "\e[?25h" // show cursor
 
+
+// String formating ---------------------------------------------------------
+
+static inline char* int2bin8(uint8_t x) {
+    static char str[9];
+    for (int i = 0; i < 8; i++) {
+        str[7 - i] = (x & (1 << i)) ? '1' : '0';
+    }
+    str[8] = '\0';
+    return str;
+}
+
+static inline char* int2bin16(uint16_t x) {
+    static char str[17];
+    for (int i = 0; i < 16; i++) {
+        str[15 - i] = (x & (1 << i)) ? '1' : '0';
+    }
+    str[16] = '\0';
+    return str;
+}
+
+static inline char* int2bin32(uint32_t x) {
+    static char str[33];
+    for (int i = 0; i < 32; i++) {
+        str[31 - i] = (x & (1 << i)) ? '1' : '0';
+    }
+    str[32] = '\0';
+    return str;
+}
+
+static inline char* int2bin(char* buf, uint32_t val, uint8_t bits) {
+    // static char buf[33];
+    for (int i = 0; i < bits; i++) {
+        buf[bits -1 - i] = (val & (1 << i)) ? '1' : '0';
+    }
+    buf[bits] = '\0';
+    return buf;
+}
+
+
 // Debugging ----------------------------------------------------------------
 
 #if defined(NO_DEBUG_COLOR)
@@ -1044,11 +1069,10 @@ typedef unsigned long ulong;
 #undef FATALPRINT
 #define FATALPRINT(_fmt, ...) defprintf(FATALSTR _fmt, WHEREARG, ##__VA_ARGS__)
 #define FATALPRINTC(cond, _fmt, ...)                   \
-  if (cond)                                            \
-  {                                                    \
-    defprintf(FATALSTR _fmt, WHEREARG, ##__VA_ARGS__); \
-    defprintf(FATALSTRE)                               \
-  }
+    if (cond) {                                        \
+        defprintf(FATALSTR _fmt, WHEREARG, ##__VA_ARGS__); \
+        defprintf(FATALSTRE)                               \
+    }
 #define FATALDO(f) f
 #else
 #
@@ -1075,4 +1099,3 @@ typedef unsigned long ulong;
 #define WEAK __attribute__((weak))
 #define WEAKA(a) __attribute__((weak, alias(a)))
 
-#endif /* DEF_H */

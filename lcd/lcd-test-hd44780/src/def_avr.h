@@ -85,7 +85,7 @@ inline void ADC_MUX(uint8_t channel)  {
     ADMUX = (ADMUX & 0b11100000) | (channel & 0b00000111);
 }
 #else
-inline void ADC_MUX(uint8_t mux)          { ADMUX = (ADMUX & 0b11110000) | (mux); }
+inline void ADC_MUX(uint8_t channel)          { ADMUX = (ADMUX & 0b11110000) | (channel); }
 #endif
 
 inline void ADC_REF_AREF(void)            { ADMUX = (ADMUX & 0b00011111); }              // Set voltage reference to AREF (external reference pin)
@@ -174,50 +174,11 @@ inline void TIMER0_OCB_COM_SET(void)      { TCCR0A = (TCCR0A & 0b11001111) | 0b0
 #endif
 #endif
 
-// AVR Timer 1 (8 bit) ------------------------------------------------------
-// Clock source
-inline void TIMER1_CLK_DISSABLE(void)     { TCCR1 &= 0b11110000; }        // Disable timer
-inline void TIMER1_CLK_PRES_1(void)       { TCCR1 = (TCCR1 & 0b11110000) | 0b00000001; }  // Select prescaler 1/1
-inline void TIMER1_CLK_PRES_2(void)       { TCCR1 = (TCCR1 & 0b11110000) | 0b00000010; }  // Select prescaler 1/2
-inline void TIMER1_CLK_PRES_4(void)       { TCCR1 = (TCCR1 & 0b11110000) | 0b00000011; }  // Select prescaler 1/4
-inline void TIMER1_CLK_PRES_8(void)       { TCCR1 = (TCCR1 & 0b11110000) | 0b00000100; }  // Select prescaler 1/8
-inline void TIMER1_CLK_PRES_16(void)      { TCCR1 = (TCCR1 & 0b11110000) | 0b00000101; }  // Select prescaler 1/16
-inline void TIMER1_CLK_PRES_32(void)      { TCCR1 = (TCCR1 & 0b11110000) | 0b00000101; }  // Select prescaler 1/32
-inline void TIMER1_CLK_PRES_64(void)      { TCCR1 = (TCCR1 & 0b11110000) | 0b00000111; }  // Select prescaler 1/64
-inline void TIMER1_CLK_PRES_128(void)     { TCCR1 = (TCCR1 & 0b11110000) | 0b00001000; }  // Select prescaler 1/128
-inline void TIMER1_CLK_PRES_256(void)     { TCCR1 = (TCCR1 & 0b11110000) | 0b00001001; }  // Select prescaler 1/256
-inline void TIMER1_CLK_PRES_512(void)     { TCCR1 = (TCCR1 & 0b11110000) | 0b00001010; }  // Select prescaler 1/512
-inline void TIMER1_CLK_PRES_1024(void)    { TCCR1 = (TCCR1 & 0b11110000) | 0b00001011; }  // Select prescaler 1/1024
-inline void TIMER1_CLK_PRES_2048(void)    { TCCR1 = (TCCR1 & 0b11110000) | 0b00001100; }  // Select prescaler 1/2048
-inline void TIMER1_CLK_PRES_4096(void)    { TCCR1 = (TCCR1 & 0b11110000) | 0b00001101; }  // Select prescaler 1/4096
-inline void TIMER1_CLK_PRES_8192(void)    { TCCR1 = (TCCR1 & 0b11110000) | 0b00001110; }  // Select prescaler 1/8192
-inline void TIMER1_CLK_PRES_16384(void)   { TCCR1 = (TCCR1 & 0b11110000) | 0b00001111; }  // Select prescaler 1/16384
-
-inline void TIMER1_OVF_INT(bool en)       { if (en) BitSet(TIMSK, TOIE1); else BitClear(TIMSK, TOIE1); }    // Enable/Disable timpe overflow interrupt
-inline void TIMER1_OCA_INT(bool en)       { if (en) BitSet(TIMSK, OCIE1A); else BitClear(TIMSK, OCIE1A); }  // Enable/Disable output compare A interrupt
-inline void TIMER1_OCB_INT(bool en)       { if (en) BitSet(TIMSK, OCIE1B); else BitClear(TIMSK, OCIE1B); }  // Enable/Disable output compare B interrupt
-
-inline void  TIMER1_OCA(uint8_t oca)      { OCR1A = oca; }                  // Set output compare A register
-inline void  TIMER1_OCB(uint8_t ocb)      { OCR1B = ocb; }                  // Set output compare B register
-inline void  TIMER1_OCC(uint8_t occ)      { OCR1C = occ; }                  // Set output compare B register
-inline void  TIMER1_LOAD(uint8_t tcnt)    { TCNT1 = tcnt; }                  // Reload timer register
-
-// Waveform generation mode
-inline void TIMER1_OCA_PWM_ENABLE(bool en)   { if (en) BitSet(TCCR1, PWM1A); else BitClear(TCCR1, PWM1A); }
-inline void TIMER1_OCB_PWM_ENABLE(bool en)   { if (en) BitSet(GTCCR, PWM1B); else BitClear(TCCR1, PWM1B); }
-
-// Capture Output Modes
-inline void TIMER1_OCA_COM_NORMAL(void)        { TCCR1 &= 0b11001111; }                       // OC0A disconnected
-inline void TIMER1_OCA_COM_TOGGLE(void)        { TCCR1 = (TCCR1 & 0b11001111) | 0b00010000; } // Toggle OC0A on compare match
-inline void TIMER1_OCA_COM_CLEAR(void)         { TCCR1 = (TCCR1 & 0b11001111) | 0b00100000; } // Clear OC0A on compare match
-inline void TIMER1_OCA_COM_SET(void)           { TCCR1 = (TCCR1 & 0b11001111) | 0b00110000; } // Set OC0A on compare match
-inline void TIMER1_OCB_COM_NORMAL(void)        { GTCCR &= 0b00111111; }                       // OC0B disconnected
-inline void TIMER1_OCB_COM_TOGGLE(void)        { GTCCR = (GTCCR & 0b11001111) | 0b00010000; } // Toggle OC0B on compare match
-inline void TIMER1_OCB_COM_CLEAR(void)         { GTCCR = (GTCCR & 0b11001111) | 0b00100000; } // Clear OC0B on compare match
-inline void TIMER1_OCB_COM_SET(void)           { GTCCR = (GTCCR & 0b11001111) | 0b00110000; } // Set OC0B on compare match
 
 // AVR Timer 1 (16 bit) -----------------------------------------------------
 #ifdef TIMSK1
+#define TIMSK TIMSK1 
+#endif
 // Clock source
 inline void TIMER1_CLK_DISSABLE(void)     { TCCR1B &= 0b11111000; }                        // Disable timer
 inline void TIMER1_CLK_PRES_1(void)       { TCCR1B = (TCCR1B & 0b11111000) | 0b00000001; } // Select prescaler 1/1            
@@ -238,7 +199,6 @@ inline void TIMER1_OCB(uint16_t ocr)      { OCR1BH = (uint8_t) ((uint16_t)ocr>>8
 inline void TIMER1_RELOAD(uint16_t tcnt)  { TCNT1H = (uint8_t) ((uint16_t)tcnt>>8); TCNT1L = (uint8_t)((uint16_t)tcnt & 0xff); } // Reload timer register
 
 // Waveform generation mode
-// inline void TIMER1_MODE_NORMAL(void)       { TCCR1A = (TCCR1A & 0b11111100) | 0b00000000; TCCR1B = (TCCR1B & 0b11100111) | (WGM12 }
 inline void TIMER1_WGM_NORMAL(void)       { BitClear(TCCR1B, WGM13); BitClear(TCCR1B, WGM12); BitClear(TCCR1A, WGM11); BitClear(TCCR1A, WGM10); }
 inline void TIMER1_WGM_CTC(void)          { BitClear(TCCR1B, WGM13); BitSet(TCCR1B, WGM12); BitClear(TCCR1A, WGM11); BitClear(TCCR1A, WGM10); }
 
@@ -287,7 +247,46 @@ inline void TIMER2_WGM_CTC(void)          { BitClear(TCCR2B, WGM22); BitSet(TCCR
 #endif
 
 
-#endif
+// Generic ATmega 16-bit timer macros
+
+
+#define TIMER_OCA(n, ocr)           { OCR##n##AH = (uint8_t) ((uint16_t)ocr>>8); OCR##n##AL = (uint8_t) ((uint16_t)ocr & 0xff); } // Set output compare     A register
+#define TIMER_OCB(n, ocr)           { OCR##n##BH = (uint8_t) ((uint16_t)ocr>>8); OCR##n##BL = (uint8_t) ((uint16_t)ocr & 0xff); } // Set output compare         B register                                                           
+#define TIMER_OCC(n, ocr)           { OCR##n##CH = (uint8_t) ((uint16_t)ocr>>8); OCR##n##CL = (uint8_t) ((uint16_t)ocr & 0xff); } // Set output compare         B register                                                           
+#define TIMER_LOAD(n, tcnt)         { TCNT##n##H = (uint8_t) ((uint16_t)tcnt>>8); TCNT##n##L = (uint8_t)((uint16_t)tcnt & 0xff); } // Load timer regi    s    ter
+#define TIMER_ICR(n, icr)           { ICR##n##H = (uint8_t) ((uint16_t)icr>>8); ICR##n##L = (uint8_t)((uint16_t)icr & 0xff); }
+ 
+// Interrupt control
+#define TIMER_OVF_INT(n, en)         do { if (en) BitSet(TIMSK##n, TOIE##n); else BitClear(TIMSK##n, TOIE##n); } while (0) // Enable/Disable timpe overflow interrupt
+#define TIMER_OCA_INT(n, en)         do { if (en) BitSet(TIMSK##n, OCIE##n##A); else BitClear(TIMSK##n, OCIE##n##A); } while (0)  // Enable/Disable output compare A interrupt
+#define TIMER_OCB_INT(n, en)         do { if (en) BitSet(TIMSK##n, OCIE##n##B); else BitClear(TIMSK##n, OCIE##n##B); } while (0)  // Enable/Disable output compare B interrupt
+
+// Clock source control
+#define TIMER_CLK_SET(n, src)        (TCCR##n##B = (TCCR##n##B & 0b11111000) | (src))
+#define TIMER_CLK_DISSABLE(n)        TIMER_CLK_SET(n, 0b00000000)
+#define TIMER_CLK_DIV_1(n)           TIMER_CLK_SET(n, 0b00000001)
+#define TIMER_CLK_DIV_8(n)           TIMER_CLK_SET(n, 0b00000010)
+#define TIMER_CLK_DIV_64(n)          TIMER_CLK_SET(n, 0b00000011)
+#define TIMER_CLK_DIV_256(n)         TIMER_CLK_SET(n, 0b00000100)
+#define TIMER_CLK_DIV_1024(n)        TIMER_CLK_SET(n, 0b00000101)
+#define TIMER_CLK_EXT_FE(n)          TIMER_CLK_SET(n, 0b00000110)
+#define TIMER_CLK_EXT_RE(n)          TIMER_CLK_SET(n, 0b00000111)
+
+// Compare Output Mode (non-PWM) (what happens to pin when compare match)
+#define TIMER_COM_OC_NORMAL(n, oc)   do { BitClear(TCCR##n##A, COM##n##oc##1); BitClear(TCCR##n##A, COM##n##oc##0); } while (0)
+#define TIMER_COM_OC_TOGGLE(n, oc)   do { BitClear(TCCR##n##A, COM##n##oc##1); BitSet(TCCR##n##A, COM##n##oc##0); } while (0)
+#define TIMER_COM_OC_CLEAR(n, oc)    do { BitSet(TCCR##n##A, COM##n##oc##1); BitClear(TCCR##n##A, COM##n##oc##0); } while (0)
+#define TIMER_COM_OC_SET(n, oc)      do { BitSet(TCCR##n##A, COM##n##oc##1); BitSet(TCCR##n##A, COM##n##oc##0); } while (0)
+
+#define TIMER_MODE_NORMAL(n)         do { BitClear(TCCR##n##B, WGM##n##3); BitClear(TCCR##n##B, WGM##n##2); BitClear(TCCR##n##A, WGM##n##1); BitClear(TCCR##n##A, WGM##n##0); } while (0)
+#define TIMER_MODE_CTC(n)            do { BitClear(TCCR##n##B, WGM##n##3); BitSet(TCCR##n##B, WGM##n##2); BitClear(TCCR##n##A, WGM##n##1); BitClear(TCCR##n##A, WGM##n##0); } while (0)
+#define TIMER_MODE_FAST_PWM_8BIT(n)  do { BitClear(TCCR##n##B, WGM##n##3); BitSet(TCCR##n##B, WGM##n##2); BitClear(TCCR##n##A, WGM##n##1); BitSet(TCCR##n##A, WGM##n##0); } while (0)
+#define TIMER_MODE_FAST_PWM_9BIT(n)  do { BitClear(TCCR##n##B, WGM##n##3); BitSet(TCCR##n##B, WGM##n##2); BitSet(TCCR##n##A, WGM##n##1); BitClear(TCCR##n##A, WGM##n##0); } while (0)
+#define TIMER_MODE_FAST_PWM_10BIT(n) do { BitClear(TCCR##n##B, WGM##n##3); BitSet(TCCR##n##B, WGM##n##2); BitSet(TCCR##n##A, WGM##n##1); BitSet(TCCR##n##A, WGM##n##0); } while (0)
+#define TIMER_MODE_FAST_PWM_ICR(n)   do { BitSet(TCCR##n##B, WGM##n##3); BitSet(TCCR##n##B, WGM##n##2); BitSet(TCCR##n##A, WGM##n##1); BitClear(TCCR##n##A, WGM##n##0); } while (0)
+#define TIMER_MODE_FAST_PWM_OCR(n)   do { BitSet(TCCR##n##B, WGM##n##3); BitSet(TCCR##n##B, WGM##n##2); BitSet(TCCR##n##A, WGM##n##1); BitSet(TCCR##n##A, WGM##n##0); } while (0)
+
+
 
 // Arduino specific ---------------------------------------------------------
 

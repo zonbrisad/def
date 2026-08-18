@@ -126,8 +126,19 @@ argt() { ##D Install argtable3 library
   srcInstall "${dst}" "${argtable_src[@]}"
 }
 
+# Check if current dir(PWD) is in a git repository
+is_git_repo() {
+  git rev-parse --is-inside-work-tree  &>/dev/null
+}
 
-##-
+littlefs() { ##D Download littlefs embedded filesystem
+  # if is_git_repo ; then
+  #   bpReadBoolDN "Do you want littlefs as a submodule?"
+  # fi
+  # return
+  git_clone https://github.com/littlefs-project/littlefs.git 
+
+}
 
 #
 # Clone git repo
@@ -135,26 +146,35 @@ argt() { ##D Install argtable3 library
 # $1 URL
 # $2 Destination dir
 #
-gclone() {
-  fn=$(basename -- "$1")
-  fn="${fn%.*}"
-  bpCd "${2}"
-  if [ -e "$fn" ]; then
-    bpInfo "Directory $(bpColorizeFile "$(realpath "$fn")") already exists, skipping cloning"
+git_clone() {
+  local URL="$1"
+  local DST="$2"
+  local FILE
+  FILE=$(basename -s .git "$1")
+
+  bpCd "${DST}"
+  if [ -e "$FILE" ]; then
+    bpInfo "Directory $(bpColorizeFile "$(realpath "$FILE")") already exists, skipping cloning"
     bpCd -
     return
   fi
 
-  if git clone "$1"; then
-    bpOk "Cloning of $(bpColorizeUrl "$1") successfull."
-  else
-    bpError "Cloning of $(bpColorizeUrl "$1") failed."
+  if is_git_repo ; then
+    if bpReadBoolDN "Do you want littlefs as a submodule?"; then
+      if git submodule add "$URL" ; then
+        bpOk "Cloning of $(bpColorizeUrl "$URL") successfull."
+      else
+        bpError "Cloning of $(bpColorizeUrl "$URL") failed."
+      fi
+      return
+    fi
   fi
-}
 
-ghClone() { ## Github clone
-  #  gclone "ssh://git@${ghURL}:/${ghUser}/${1}.git" "${PROJDIR}"
-  gclone "${1}" "${DOWNLOAD}"
+  if git clone "$URL"; then
+    bpOk "Cloning of $(bpColorizeUrl "$URL") successfull."
+  else
+    bpError "Cloning of $(bpColorizeUrl "$URL") failed."
+  fi
 }
 
 download() { ##D Download 3d party projects
@@ -171,11 +191,11 @@ download() { ##D Download 3d party projects
     ((i++))
 		
 		if [ "$method" == "git" ]; then 
-      ghClone "${proj}"
+      git_clone "${proj}"  "${DOWNLOAD}"
 		fi
 
     if [ "$method" == "tar" ]; then 
-		  rm -f ${DOWNLOAD}/$(basename "$proj")
+		  rm -f "${DOWNLOAD}/$(basename "$proj")"
       wget  --show-progress --directory-prefix "${DOWNLOAD}" "${proj}"
 		fi
 

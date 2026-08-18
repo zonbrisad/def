@@ -16,6 +16,12 @@
 #if defined(__AVR__)
 #include <avr/pgmspace.h>
 #include <util/delay.h>
+#define lcd_delay_us(us) _delay_us(us)
+#endif
+
+#if defined(PICO_BOARD)
+#include "pico/stdlib.h"
+#define lcd_delay_us(us) sleep_us(us)
 #endif
 
 static uint16_t do_nothing_callback(HD44780_MSG msg, uint16_t data_arg) {
@@ -99,9 +105,9 @@ static void lcd_write(uint8_t data, uint8_t rs) {
 void lcd_send_command(uint8_t cmd) {
     lcd_write(cmd, 0);
     if ((cmd == HD44780_INST_CLEAR) | (cmd == HD44780_INST_HOME))
-        _delay_us(HD44780_DELAY_CMD_CLR);
+        lcd_delay_us(HD44780_DELAY_CMD_CLR);
     else
-        _delay_us(HD44780_DELAY_CMD);   
+        lcd_delay_us(HD44780_DELAY_CMD);
 }
 
 /**
@@ -111,7 +117,7 @@ void lcd_send_command(uint8_t cmd) {
  */
 void lcd_send_data(uint8_t data) {
     lcd_write(data, 1);
-    _delay_us(HD44780_DELAY_CMD);
+    lcd_delay_us(HD44780_DELAY_CMD);
 }
 
 void lcd_gotoxy(uint8_t x, uint8_t y) {

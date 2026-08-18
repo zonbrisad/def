@@ -80,7 +80,11 @@ tparty=(
 	"git" "https://github.com/damadmai/pfleury.git" ":"	
 )
 
-
+jsmn_src=(
+  "jsmnutil/jsmn.h"
+	"jsmnutil/jsmn_util.h"
+	"jsmnutil/jsmn_util.c"
+)
 
 #
 # $1 destination
@@ -112,6 +116,11 @@ defu() { ##D Install def_util.h
 dict() { ##D Dictionary datastrcutures
   dst="$2"
   srcInstall "${dst}" "${dictionary[@]}"
+}
+
+jsmnutil() { ##D Install jsmn + jsmnutil
+  dst="$2"
+  srcInstall "${dst}" "${jsmn_src[@]}"
 }
 
 ##- 3dparty
